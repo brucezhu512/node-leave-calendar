@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "U353910": {
+      "id": "u353910",
+      "name": "Bruce",
+      "credential": "111",
+      "pods": "Moonraker"
+    }
+  },
+
+  "pods": [
+    "Moonraker"
+  ]
+}

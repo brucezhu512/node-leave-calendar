@@ -1,16 +1,11 @@
 var express = require('express');
+var session = require('express-session');
+var SessionFileStore = require('session-file-store')(session);
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-var index = require('./routes/index');
-var users = require('./routes/users');
-var bootstrap = require('./routes/bootstrap');
-
-// Custom Pages
-var signin = require('./routes/signin');
 
 var app = express();
 
@@ -26,12 +21,35 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
-app.use('/bootstrap', bootstrap);
+// Express session global settings
+app.use(session({
+  secret: "you-will-never-remember-it", 
+  saveUninitialized: false,
+  resave: false,
+  cookie: { maxAge: 60 * 1000 }
+}));
 
-// Custom Routes
+// Routes for custom pages
+var signin = require('./routes/signin');
+var signout = require('./routes/signout');
+var dashboard = require('./routes/dashboard');
+
+
+// Gateway of web application
+app.all('*', function (req, res, next) {
+  if(req.session.userProfile || req.url === '/signin') {
+    req.session.previousUrl = null;
+    next();
+  } else {
+    req.session.previousUrl = req.url;
+    res.redirect('/signin');
+  }
+});
+
+// List of routes
 app.use('/signin', signin);
+app.use('/signout', signout);
+app.use('/dashboard', dashboard);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
