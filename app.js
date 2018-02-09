@@ -33,6 +33,7 @@ app.use(session({
 var signin = require('./routes/signin');
 var signout = require('./routes/signout');
 var dashboard = require('./routes/dashboard');
+var profile = require('./routes/profile');
 
 
 // Gateway of web application
@@ -46,10 +47,11 @@ app.all('*', function (req, res, next) {
   }
 });
 
-// List of routes
+// List of route mappings
 app.use('/signin', signin);
 app.use('/signout', signout);
 app.use('/dashboard', dashboard);
+app.use('/profile', profile);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

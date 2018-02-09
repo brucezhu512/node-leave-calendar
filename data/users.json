@@ -4,9 +4,18 @@
       "id": "u353910",
       "name": "Bruce",
       "credential": "111",
-      "pods": "Moonraker"
+      "pods": "Moonraker",
+      "roles": "Developer, Admin"
     }
   },
+
+  "roles": [
+    "Admin",
+    "Manager",
+    "Developer",
+    "Business Analyst",
+    "Tester"
+  ],
 
   "pods": [
     "Moonraker"
