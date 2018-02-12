@@ -1,11 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <% include includes/header-meta %>
-
+    <% include includes/header %>
     <title><%= title %></title>
-
-    <% include includes/header-js %>
+    <link href="/css/pages/dashboard.css" rel="stylesheet">
   </head>
 
   <body>
@@ -13,37 +11,28 @@
     <div class="container-fluid">
       <div class="row">
         <% include includes/sidebar %>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header"><%= title %></h1>
 
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          <div class="border-bottom">
+            <h1 class="h2">User Profile</h1>
+          </div>
+          <div class="text-center">
+            <div class="col-md-6 mb-3">
+              <label>UID : <%= uid %></label>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+            <div class="col-md-6 mb-3">
+              <label>Name : <%= name %></label>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+            <div class="col-md-6 mb-3">
+              <label>Pods : <%= pods %></label>
             </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
+            <div class="col-md-6 mb-3">
+              <label>Roles : <%= roles %></label>
             </div>
           </div>
+        </main>
 
-          <h2 class="sub-header">User Profile</h2>
-          
-        </div>
-      </div>
-    </div>
+    <% include includes/bootstrap-js %>
     
   </body>
 </html>
