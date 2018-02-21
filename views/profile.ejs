@@ -18,11 +18,15 @@
           </div>
           <div class="text-center">
             <div class="col-md-6 mb-3">
-              <label>UID : <%= uid %></label>
-            </div>
-            <div class="col-md-6 mb-3">
               <label>Name : <%= name %></label>
             </div>
+            <div class="col-md-6 mb-3">
+              <form class="form-changePassword" method="POST" id="formChangePassword" action="/changePassword">
+              <label>UID : <%= uid %></label>
+              <input type="password" id="newPassword" name="newPassword" placeholder="New Password" required>
+              <button>Update</button>
+            </div>
+            <a class=""><%= message %></a>
             <div class="col-md-6 mb-3">
               <label>Pods : <%= pods %></label>
             </div>

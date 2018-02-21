@@ -34,6 +34,7 @@ var signin = require('./routes/signin');
 var signout = require('./routes/signout');
 var dashboard = require('./routes/dashboard');
 var profile = require('./routes/profile');
+var changePassword = require('./routes/changePassword');
 
 
 // Gateway of web application
@@ -52,6 +53,7 @@ app.use('/signin', signin);
 app.use('/signout', signout);
 app.use('/dashboard', dashboard);
 app.use('/profile', profile);
+app.use('/changePassword', changePassword);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

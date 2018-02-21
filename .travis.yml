@@ -1,0 +1,24 @@
+dist: trusty
+group: stable
+
+language: node_js
+node_js:
+  - "8"
+
+services:
+  - redis-server
+
+install:
+  - npm install
+
+script:
+  - pwd
+  - ls -al
+  - npm test
+
+after_success: npm run coverage
+
+cache:
+  directories:
+    - "node_modules"
+

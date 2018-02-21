@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+var redis = require('./db/redis');
+
 // Global env variables
 var env = require("./consts.js").env; 
 
@@ -16,16 +18,23 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.post('/', function(req, res, next) {
+router.post('/', async (req, res, next) => {
   let uid = req.body.inputUid.toUpperCase();
-  let userProfile = users.profiles[uid];
-  if (userProfile && req.body.inputPassword === userProfile.credential) {
-    req.session.userProfile = userProfile;
+  var userProfile = await redis.load('user', uid);
+  if(!userProfile) {
+    userProfile = users.profiles[uid];
+  } 
+  
+  if (req.body.inputPassword === userProfile.credential) {
+    let currentTs = Date.now();   
+    userProfile.lastSignTimestamp = currentTs;
+    req.session.userProfile = await redis.saveAndLoad('user', uid, userProfile);
+    
     // Cache username in cookie if 'Remember Me' is ticked
     if(req.body.rememberMe) {
       res.cookie(env.cookie.name, userProfile.id, { domain: env.cookie.domain, path: env.cookie.path });
     }
-
+    
     if (req.session.previousUrl) {
       res.redirect(req.session.previousUrl);
     } else {
