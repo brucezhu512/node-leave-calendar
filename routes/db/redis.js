@@ -13,7 +13,6 @@ exports.saveAndLoad = async (domain, key, data) => {
 exports.save = async (domain, key, data) => {
   return await runWithClient(async (client) => {
     let saved = await saveWithPromise(client, domain, key, data)
-    log('Saved: ' + JSON.stringify(data));
     return saved;
   });
 }
@@ -21,7 +20,6 @@ exports.save = async (domain, key, data) => {
 exports.load = async (domain, key) => {
   return await runWithClient(async (client) => {
     let data = await loadWithPromise(client, domain, key);
-    log('Loaded: ' + JSON.stringify(data));
     return data;
   });
 }
@@ -38,13 +36,11 @@ function runWithClient(callback) {
 function saveWithPromise(client, domain, key, json) {
   return new Promise((resolve, reject) => {
     client.hmset(key, json, (err, res) => {
-      if(err) reject(false);
+      if(err) reject(err);
       resolve(true);
     });
   }).catch(e => {
-    // Failed to save data
-    log('Fail to save JSON: ' + e);
-    reject(false);
+    reject(e);
   });
 }
 
@@ -55,12 +51,6 @@ function loadWithPromise(client, domain, key) {
       resolve(val);
     });
   }).catch(e => {
-    // Failed to load data
-    log('Fail to load JSON: ' + e);
     reject(e);
   });
-}
-
-function log(msg) {
-  //console.log('## [redis] - ' + msg);
 }
