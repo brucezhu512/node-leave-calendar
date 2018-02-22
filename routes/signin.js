@@ -1,13 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-var dbUtils = require('../database/utils');
+var userUtil = require('../database/domains/user');
 
 // Global env variables
-var env = require("./consts.js").env; 
-
-// Users data json file
-var users = require("../data/users.json");
+var env = require("./consts").env; 
 
 /* GET signin page. */
 router.get('/', function(req, res, next) {
@@ -19,17 +16,19 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', async (req, res, next) => {
-  let uid = req.body.inputUid.toUpperCase();
-  var userProfile = await dbUtils.load('user', uid);
-  if(!userProfile) {
-    userProfile = users.profiles[uid];
-  } 
-  
-  if (req.body.inputPassword === userProfile.credential) {
-    let currentTs = Date.now();   
-    userProfile.lastSignTimestamp = currentTs;
-    req.session.userProfile = await dbUtils.saveAndLoad('user', uid, userProfile);
+  const uid = req.body.inputUid;
+  const pwd = req.body.inputPassword;
+
+  const isAuth = await userUtil.authenticate(uid, pwd);
+  if(isAuth) {
+    const saved = await userUtil.update(uid, (usr) => {
+      usr.lastSignTimestamp = Date.now();
+    })
     
+    if(saved) {
+      req.session.userProfile = await userUtil.load(uid);
+    }
+
     // Cache username in cookie if 'Remember Me' is ticked
     if(req.body.rememberMe) {
       res.cookie(env.cookie.name, userProfile.id, { domain: env.cookie.domain, path: env.cookie.path });
@@ -47,6 +46,6 @@ router.post('/', async (req, res, next) => {
         uid: ''
       });
   }
-})
+});
 
 module.exports = router;

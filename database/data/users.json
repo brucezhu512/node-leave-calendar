@@ -1,13 +1,13 @@
 {
-  "profiles": {
-    "U353910": {
+  "profiles": [
+    {
       "id": "u353910",
       "name": "Bruce",
       "credential": "111",
       "pods": "Moonraker",
-      "roles": ["Developer", "Admin"]
+      "roles": "Developer, Admin"
     }
-  },
+  ],
 
   "roles": [
     "Admin",
