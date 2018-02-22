@@ -2,14 +2,6 @@
 
 var redis = require('redis');
 
-exports.saveAndLoad = async (domain, key, data) => {
-  if(await exports.save(domain, key, data)) {
-    return await exports.load(domain, key);
-  } else {
-    throw new Error(`Fail to save ${JSON.stringify(data)} with key '${key}'`);
-  }
-}
-
 exports.save = async (domain, key, data) => {
   return await runWithClient(async (client) => {
     let saved = await saveWithPromise(client, domain, key, data)
@@ -24,6 +16,10 @@ exports.load = async (domain, key) => {
   });
 }
 
+function getDomainKey(domain, key) {
+  return `#${domain}#_#${key}`;
+}
+
 function runWithClient(callback) {
   let client = redis.createClient();
   try {
@@ -35,7 +31,8 @@ function runWithClient(callback) {
 
 function saveWithPromise(client, domain, key, json) {
   return new Promise((resolve, reject) => {
-    client.hmset(key, json, (err, res) => {
+    const domainKey = getDomainKey(domain, key);
+    client.hmset(domainKey, json, (err, res) => {
       if(err) reject(err);
       resolve(true);
     });
@@ -46,7 +43,8 @@ function saveWithPromise(client, domain, key, json) {
 
 function loadWithPromise(client, domain, key) {
   return new Promise((resolve, reject) => {
-    client.hgetall(key, (err, val) => {
+    const domainKey = getDomainKey(domain, key);
+    client.hgetall(domainKey, (err, val) => {
       if(err) reject(err);
       resolve(val);
     });

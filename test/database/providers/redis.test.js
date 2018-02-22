@@ -1,6 +1,6 @@
 'use strict';
 
-const testUtil = require('../../util');
+const testUtil = require('../../index');
 const redis = testUtil.require(__filename);
 
 var chai = require('chai');
@@ -21,11 +21,6 @@ describe('redis', () => {
   describe('#load(domain, key)', () => {
     it("should return same json object as what saved by the key previously", async () => {
       assert.equal(JSON.stringify(await redis.load(domain, key)), JSON.stringify(sampleJson1));
-    });
-  });
-  describe('#saveAndLoad(domain, key, value)', () => {
-    it("should return same json object as what saved", async () => {
-      assert.equal(JSON.stringify(await redis.saveAndLoad(domain, key, sampleJson2)), JSON.stringify(sampleJson2));
     });
   });
 });
