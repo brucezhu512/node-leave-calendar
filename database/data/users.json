@@ -5,7 +5,8 @@
       "name": "Bruce",
       "credential": "111",
       "pods": "Moonraker",
-      "roles": "Developer, Admin"
+      "roles": "Developer, Admin",
+      "comment": "For test purpose only"
     }
   ],
 

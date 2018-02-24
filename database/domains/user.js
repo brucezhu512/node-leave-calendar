@@ -10,29 +10,27 @@ exports.load = async (uid) => {
   return await dbUtils.load(DOMAIN, uid.toUpperCase());
 };
 
-exports.find = async (uid, criteria) => {
-  return await dbUtils.find(DOMAIN, uid.toUpperCase(), criteria);
-};
-
-exports.isSync = async (expected) => {
-  return await dbUtils.find(DOMAIN, expected.id.toUpperCase(), (profile) => {
-    return profile[LAST_UPD_TIMESTAMP] == expected[LAST_UPD_TIMESTAMP];
-  });
-};
-
-exports.save = async (uid, data) => {
-  return await dbUtils.save(DOMAIN, uid.toUpperCase(), data);
+exports.save = async (user) => {
+  return await dbUtils.save(DOMAIN, user.id.toUpperCase(), user);
 };
 
 exports.update = async (uid, callback) => {
-  return await dbUtils.update(DOMAIN, uid.toUpperCase(), (data) => {
-    callback(data);
-    data[LAST_UPD_TIMESTAMP] = Date.now();
+  return await dbUtils.update(DOMAIN, uid.toUpperCase(), (user) => {
+    callback(user);
+    user[LAST_UPD_TIMESTAMP] = Date.now();
   });
 };
 
+exports.isSync = async (expected) => {
+  const latest = await exports.load(expected.id);
+  return latest[LAST_UPD_TIMESTAMP] == expected[LAST_UPD_TIMESTAMP];
+};
+
 exports.authenticate = async (uid, password) => {
-  return await dbUtils.find(DOMAIN, uid.toUpperCase(), (user) => {
-    return user.credential == password;
-  })
+  const latest = await exports.load(uid);
+  return latest.credential == password;
+};
+
+exports.reset = async () => {
+  return await dbUtils.reset(DOMAIN);
 };
