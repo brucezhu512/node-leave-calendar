@@ -19,7 +19,7 @@ const uid = 'u353910';
 
 
 describe('user', () => {
-  before(() => {
+  before(async () => {
     await userUtil.init();
   });
 
