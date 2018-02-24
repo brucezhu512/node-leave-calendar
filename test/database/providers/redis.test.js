@@ -14,13 +14,6 @@ const sampleJson2 = {"user": "mary", "email": "mary@example.com"};
 
 describe('redis', () => {
 
-  describe('#reset(domain)', () => {
-    it("should return true when domain is correct", async () => {
-      assert.isTrue(await redis.reset(domain));
-      assert.equal(await redis.count(domain), 0);
-    });
-  });
-
   describe('#save(domain, key, value)', () => {
     it("should save successfully when saving with valid key", async () => {
       await redis.save(domain, key1, sampleJson1);
@@ -85,6 +78,13 @@ describe('redis', () => {
       assert.isNotArray(maryVal);
       assert.isObject(maryVal);
       assert.equal(maryVal.email, "mary@example.com");
+    });
+  });
+
+  describe('#reset(domain)', () => {
+    it("should return true when domain is correct", async () => {
+      assert.isTrue(await redis.reset(domain));
+      assert.equal(await redis.count(domain), 0);
     });
   });
 
