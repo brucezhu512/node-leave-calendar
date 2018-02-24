@@ -4,4 +4,18 @@
 An experimental project of personal leave calendar system built on Node.js.
 
 ## Prerequisites
-- Node.js LTS version (v8.9.x) 
+- Node.js LTS version (v8.9.x)
+
+## Get Started
+1. Initialize database
+```
+$ node ./database/import.js
+Import user u353910 successfully.
+```
+2. Start App Server
+```
+$ npm start
+
+> node-leave-calendar@0.0.1 start /Workspace/github/node-leave-calendar
+> node ./bin/www
+```

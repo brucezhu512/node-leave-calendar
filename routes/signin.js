@@ -21,13 +21,9 @@ router.post('/', async (req, res, next) => {
 
   const isAuth = await userUtil.authenticate(uid, pwd);
   if(isAuth) {
-    const saved = await userUtil.update(uid, (usr) => {
+    req.session.userProfile = await userUtil.update(uid, (usr) => {
       usr.lastSignTimestamp = Date.now();
-    })
-    
-    if(saved) {
-      req.session.userProfile = await userUtil.load(uid);
-    }
+    });
 
     // Cache username in cookie if 'Remember Me' is ticked
     if(req.body.rememberMe) {

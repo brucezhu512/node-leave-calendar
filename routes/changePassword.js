@@ -8,25 +8,21 @@ router.post('/', async (req, res, next) => {
   const uid = profileInSession.id;
   const newPwd = req.body.newPassword;
 
-  let updated = false;
+  let message = 'Fail to change the password';
   if (await userUtil.isSync(profileInSession)) {
-    updated = await userUtil.update(uid, (p) => {
+    req.session.userProfile = await userUtil.update(uid, (p) => {
       p.credential = newPwd;
     });
-  }
-
-  let message = 'Fail to change the password';
-  if (updated) {
-    req.session.userProfile = await userUtil.load(uid);
     message = 'Password changed successfully';
+  } else {
+    message = 'User profile was just updated by someone else, please re';
   }
 
-  const updatedProfile = req.session.userProfile;
   res.render('profile', { title: 'User Profile',
-                          uid: updatedProfile.id,
-                          name: updatedProfile.name,
-                          pods: updatedProfile.pods,
-                          roles: updatedProfile.roles,
+                          uid: profileInSession.id,
+                          name: profileInSession.name,
+                          pods: profileInSession.pods,
+                          roles: profileInSession.roles,
                           message: message
                         });
 });
