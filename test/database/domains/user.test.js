@@ -19,6 +19,10 @@ const uid = 'u353910';
 
 
 describe('user', () => {
+  before(() => {
+    userUtil.init();
+  });
+
   describe('#load(uid)', () => {
     it("should return sample user by given uid (case-insensitive)", async () => {
       assert.isNotNull(await userUtil.load(uid));

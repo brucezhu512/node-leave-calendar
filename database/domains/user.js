@@ -1,6 +1,7 @@
 'use strict';
 
-var dbUtils = require('../utils');
+const dbUtils = require('../utils');
+const userData = require('../data/users.json').profiles;
 
 const DOMAIN = 'USER';
 const LAST_UPD_TIMESTAMP = 'lastUpdateTimestamp';
@@ -31,6 +32,10 @@ exports.authenticate = async (uid, password) => {
   return latest.credential == password;
 };
 
-exports.reset = async () => {
-  return await dbUtils.reset(DOMAIN);
+exports.init = async () => {
+  await dbUtils.reset();
+  for (let user of userData) {
+    await exports.save(user);
+    console.log(`Import user ${user.id} successfully.`);
+  }
 };
