@@ -4,7 +4,8 @@
 An experimental project of personal leave calendar system built on Node.js.
 
 ## Prerequisites
-- Node.js LTS version (v8.9.x)
+- Node.js v8.9.x (LTS)
+- Redis v4.0.x
 
 ## Get Started
 1. Initialize database
