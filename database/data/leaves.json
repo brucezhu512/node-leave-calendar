@@ -1,0 +1,40 @@
+{
+  "leaves": [
+    {
+      "uid": "u353910",
+      "leaveDate": "2018-02-26",
+      "leaveTimeStart": "9",
+      "leaveTimeEnd": "10",
+      "catchupDate": "2018-03-02",
+      "catchupTimeStart": "7",
+      "catchupTimeEnd": "8"
+    },
+    {
+      "uid": "u353910",
+      "leaveDate": "2018-02-27",
+      "leaveTimeStart": "17",
+      "leaveTimeEnd": "18",
+      "catchupDate": "2018-03-01",
+      "catchupTimeStart": "7",
+      "catchupTimeEnd": "8"
+    },
+    {
+      "uid": "u353910",
+      "leaveDate": "2018-02-27",
+      "leaveTimeStart": "16",
+      "leaveTimeEnd": "17",
+      "catchupDate": "2018-03-02",
+      "catchupTimeStart": "8",
+      "catchupTimeEnd": "9"
+    },
+    {
+      "uid": "u353910",
+      "leaveDate": "2018-02-28",
+      "leaveTimeStart": "9",
+      "leaveTimeEnd": "10",
+      "catchupDate": "2018-03-01",
+      "catchupTimeStart": "8",
+      "catchupTimeEnd": "9"
+    }
+  ]
+}

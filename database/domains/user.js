@@ -33,7 +33,7 @@ exports.authenticate = async (uid, password) => {
 };
 
 exports.init = async () => {
-  await dbUtils.reset();
+  await dbUtils.reset(DOMAIN);
   for (let user of userData) {
     await exports.save(user);
     console.log(`Import user ${user.id} successfully.`);

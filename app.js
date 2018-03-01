@@ -26,13 +26,14 @@ app.use(session({
   secret: "you-will-never-remember-it", 
   saveUninitialized: false,
   resave: false,
-  cookie: { maxAge: 60 * 1000 }
+  cookie: { maxAge: 600 * 1000 }
 }));
 
 // Routes for custom pages
 var signin = require('./routes/signin');
 var signout = require('./routes/signout');
 var dashboard = require('./routes/dashboard');
+var homepage = require('./routes/homepage');
 var profile = require('./routes/profile');
 var changePassword = require('./routes/changePassword');
 
@@ -52,6 +53,7 @@ app.all('*', function (req, res, next) {
 app.use('/signin', signin);
 app.use('/signout', signout);
 app.use('/dashboard', dashboard);
+app.use('/homepage', homepage);
 app.use('/profile', profile);
 app.use('/changePassword', changePassword);
 

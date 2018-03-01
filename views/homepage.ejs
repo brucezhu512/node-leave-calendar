@@ -14,7 +14,7 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">Dashboard</h1>
+            <h1 class="h2"><%= title %></h1>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
                 <button class="btn btn-sm btn-outline-secondary">Share</button>
@@ -34,6 +34,7 @@
             <table class="table table-striped table-sm">
               <thead>
                 <tr>
+                  <th hidden>#id#</th>
                   <th>Leave Date</th>
                   <th>Start Time</th>
                   <th>End Time</th>
@@ -44,15 +45,18 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>2017-10-17</td>
-                  <td>9:00</td>
-                  <td>10:00</td>
-                  <td>1</td>
-                  <td>2017-10-18</td>
-                  <td>7:00</td>
-                  <td>8:00</td>
-                </tr>
+                <% leaves.forEach( lv => { %>
+                  <tr>
+                    <td hidden><%= lv.id %></td>
+                    <td><%= lv.leaveDate %></td>
+                    <td><%= lv.leaveTimeStart %>:00</td>
+                    <td><%= lv.leaveTimeEnd %>:00</td>
+                    <td><%= lv.leaveTimeEnd - lv.leaveTimeStart %></td>
+                    <td><%= lv.catchupDate %></td>
+                    <td><%= lv.catchupTimeStart %>:00</td>
+                    <td><%= lv.catchupTimeEnd %>:00</td>
+                  </tr>
+                <% }) %>
               </tbody>
             </table>
           </div>
@@ -67,36 +71,31 @@
     <script>
       var ctx = document.getElementById("myChart");
       var myChart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
-          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          labels: [<%- chartLabels %>],
           datasets: [{
-            data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-            lineTension: 0,
-            backgroundColor: 'transparent',
-            borderColor: '#007bff',
-            borderWidth: 4,
-            pointBackgroundColor: '#007bff'
+            label: 'Urgent Leave',
+            data: [<%- chartLeaves %>],
+            backgroundColor: '#ff0026',
+            borderColor: '#ff0026',
+            borderWidth: 1
           },
           {
-            data: [11339, 28345, 15483, 29003, 26489, 21092, 10034],
-            lineTension: 0,
-            backgroundColor: 'transparent',
+            label: 'Catchup',
+            data: [<%- chartCatchups %>],
+            backgroundColor: '#007bff',
             borderColor: '#007bff',
-            borderWidth: 4,
-            pointBackgroundColor: '#007bff'
+            borderWidth: 1
           }]
         },
         options: {
           scales: {
             yAxes: [{
               ticks: {
-                beginAtZero: false
+                stepSize: 0.5
               }
             }]
-          },
-          legend: {
-            display: false,
           }
         }
       });

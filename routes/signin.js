@@ -33,7 +33,7 @@ router.post('/', async (req, res, next) => {
     if (req.session.previousUrl) {
       res.redirect(req.session.previousUrl);
     } else {
-      res.redirect('/dashboard');
+      res.redirect('/homepage');
     }
   } else {
     res.render('signin', 
