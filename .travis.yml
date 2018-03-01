@@ -11,9 +11,12 @@ services:
 install:
   - npm install
 
-script:
+before_script:
   - pwd
   - ls -al
+  - node blessing
+  
+script:
   - npm test
 
 after_success: npm run coverage
