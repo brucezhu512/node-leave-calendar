@@ -20,3 +20,7 @@ $ npm start
 > node-leave-calendar@0.0.1 start /Workspace/github/node-leave-calendar
 > node ./bin/www
 ```
+3. Signin in browser using url below
+```
+http://localhost:3000
+```
