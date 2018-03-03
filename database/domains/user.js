@@ -4,8 +4,6 @@ const dbUtils = require('../utils');
 const userData = require('../data/users.json').profiles;
 
 const DOMAIN = 'USER';
-const LAST_UPD_TIMESTAMP = 'lastUpdateTimestamp';
-const LAST_SIGN_TIMESTAMP = 'lastSignTimestamp';
 
 exports.load = async (uid) => {
   return await dbUtils.load(DOMAIN, uid.toUpperCase());
@@ -18,18 +16,23 @@ exports.save = async (user) => {
 exports.update = async (uid, callback) => {
   return await dbUtils.update(DOMAIN, uid.toUpperCase(), (user) => {
     callback(user);
-    user[LAST_UPD_TIMESTAMP] = Date.now();
+    user.lastUpdateTimestamp = Date.now();
   });
 };
 
 exports.isSync = async (expected) => {
   const latest = await exports.load(expected.id);
-  return latest[LAST_UPD_TIMESTAMP] == expected[LAST_UPD_TIMESTAMP];
+  return latest.lastUpdateTimestamp == expected.lastUpdateTimestamp;
 };
 
 exports.authenticate = async (uid, password) => {
   const latest = await exports.load(uid);
-  return latest.credential == password;
+  const auth = (latest.credential == password);
+  if (auth) {
+    latest.lastSignTimestamp = Date.now();
+    await exports.save(latest);
+  }
+  return auth;
 };
 
 exports.init = async () => {
