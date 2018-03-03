@@ -4,6 +4,7 @@
     <% include includes/header %>
     <title><%= title %></title>
     <link href="/css/pages/dashboard.css" rel="stylesheet">
+    <link href="/css/pages/bootstrap-datepicker.standalone.css" rel="stylesheet">
   </head>
 
   <body>
@@ -23,51 +24,277 @@
               <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
                 <span data-feather="calendar"></span>
                 This week
+                
               </button>
             </div>
           </div>
 
-          <canvas class="my-4" id="myChart" width="900" height="380"></canvas>
+          <canvas class="my-4" id="myChart" width="900" height="300"></canvas>
 
-          <h2>Leaves and Catch-ups</h2>
+          <h3>Summary Report</h2>
           <div class="table-responsive">
             <table class="table table-striped table-sm">
               <thead>
                 <tr>
-                  <th hidden>#id#</th>
                   <th>Leave Date</th>
                   <th>Start Time</th>
                   <th>End Time</th>
-                  <th>Duration(hr)</th>
+                  <th>Duration (hr)</th>
                   <th>Catch-up Date </th>
                   <th>Start Time</th>
                   <th>End Time</th>
                 </tr>
               </thead>
               <tbody>
-                <% leaves.forEach( lv => { %>
+                <% report.forEach( row => { %>
                   <tr>
-                    <td hidden><%= lv.id %></td>
-                    <td><%= lv.leaveDate %></td>
-                    <td><%= lv.leaveTimeStart %>:00</td>
-                    <td><%= lv.leaveTimeEnd %>:00</td>
-                    <td><%= lv.leaveTimeEnd - lv.leaveTimeStart %></td>
-                    <td><%= lv.catchupDate %></td>
-                    <td><%= lv.catchupTimeStart %>:00</td>
-                    <td><%= lv.catchupTimeEnd %>:00</td>
+                    <td><%= row.leaveDate %></td>
+                    <td><%= row.leaveTimeStart %></td>
+                    <td><%= row.leaveTimeEnd %></td>
+                    <td><%= row.duration %></td>
+                    <td><%= row.catchupDate %></td>
+                    <td><%= row.catchupTimeStart %></td>
+                    <td><%= row.catchupTimeEnd %></td>
                   </tr>
                 <% }) %>
               </tbody>
             </table>
           </div>
+
+          <h3>Record your leaves</h2>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>Leave Date</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Duration (hr)</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyLv">
+                <% leaves.forEach( l => { %>
+                  <tr id="trLv:<%= l.id %>">
+                    <td class="align-middle" id="date:<%= l.id %>"><%= l.date %></td>
+                    <td class="align-middle" id="timeStart:<%= l.id %>"><%= l.timeStart %></td>
+                    <td class="align-middle" id="timeEnd:<%= l.id %>"><%= l.timeEnd %></td>
+                    <td class="align-middle"><%= l.timeEnd.split(':')[0] - l.timeStart.split(':')[0] %></td>
+                    <td class="align-middle"><button class="btn btn-danger btn-sm" id="btnRmLv:<%= l.id %>">Remove</button></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+            <div class="row">
+              <div class="col-md-3 mb-3">
+                <input class="custom-select d-block w-100" id="leaveDate" 
+                  placeholder="Leave Date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+              </div>
+              <div class="col-md-3 mb-3">
+                <select class="custom-select d-block w-100" id="leaveTimeStart">
+                  <option value="">Start hour ...</option>
+                  <option value="9:00">9:00</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="13:00">13:00</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                </select>
+              </div>
+              <div class="col-md-3 mb-3">
+                <select class="custom-select d-block w-100" id="leaveTimeEnd">
+                  <option value="">End hour ...</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="12:00">12:00</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                  <option value="18:00">18:00</option>
+                </select>
+              </div>
+              <div class="col-md-2 mb-3">
+                <button class="btn btn-success" id="btnAddLv">Add</button>
+              </div>
+            </div>
+          </div>
+
+          <h3>Record your catch-ups</h2>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>Catch-up Date</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Duration (hr)</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyCat">
+                <% catchups.forEach( c => { %>
+                  <tr id="trCat:<%= c.id %>">
+                    <td class="align-middle" id="date:<%= c.id %>"><%= c.date %></td>
+                    <td class="align-middle" id="timeStart:<%= c.id %>"><%= c.timeStart %></td>
+                    <td class="align-middle" id="timeEnd:<%= c.id %>"><%= c.timeEnd %></td>
+                    <td class="align-middle"><%= c.timeEnd.split(':')[0] - c.timeStart.split(':')[0] %></td>
+                    <td class="align-middle"><button class="btn btn-danger btn-sm" id="btnRmCat:<%= c.id %>">Remove</button></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+            <div class="row">
+              <div class="col-md-3 mb-3">
+                <input class="custom-select d-block w-100" id="catchupDate" 
+                  placeholder="Catch-up Date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                <div class="invalid-feedback">
+                  Catch-up date is required.
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <select class="custom-select d-block w-100" id="catchupTimeStart">
+                  <option value="">Start hour ...</option>
+                  <option value="7:00">7:00</option>
+                  <option value="8:00">8:00</option>
+                  <option value="18:00">18:00</option>
+                  <option value="19:00">19:00</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please choose a valid start hour.
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <select class="custom-select d-block w-100" id="catchupTimeEnd">
+                  <option value="">End hour ...</option>
+                  <option value="8:00">8:00</option>
+                  <option value="9:00">9:00</option>
+                  <option value="19:00">19:00</option>
+                  <option value="20:00">20:00</option>
+                </select>
+                <div class="invalid-feedback">
+                    Please choose a valid end hour.
+                </div>
+              </div>
+              <div class="col-md-2 mb-3">
+                <button class="btn btn-success" id="btnAddCat">Add</button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2 mb-3">
+              <h6>Total leave hour(s):</h6>
+            </div>
+            <div class="col-md-2 mb-3">
+              <h6>Total catch-up hour(s):</h6>
+            </div>
+            <div class="col-md-2 mb-3">
+              <h6>All matched!</h6>
+            </div>
+          </div>
+          <hr class="mb-4">
+          <form class="form-leaves" method="POST" id="formLeaves" action="/homepage">
+            <button class="btn btn-primary btn-lg btn-block" type="submit" id="btnSubmit">Submit</button>
+          </form>
         </main>
       </div>
     </div>
 
     <% include includes/bootstrap-js %>
 
+    <!-- Table add/remove rows -->
+    <script type="text/javascript">
+      
+      // add callbacks for add and remove button
+      $(document).ready(() => {
+        // adding leave callback when clicking "Add" button
+        $("#btnAddLv").click(() => {
+          const leaveDate = $("#leaveDate").val();
+          const leaveTimeStart = $("#leaveTimeStart").val();
+          const leaveTimeEnd = $("#leaveTimeEnd").val();
+          const rowId = Date.now().toString();
+          
+          // add new leave record
+          const row = `<tr id="trLv:${rowId}">`
+                      + `<td class="align-middle">${leaveDate}</td>` 
+                      + `<td class="align-middle">${leaveTimeStart}</td>`
+                      + `<td class="align-middle">${leaveTimeEnd}</td>`
+                      + `<td class="align-middle">${leaveTimeEnd.split(':')[0] - leaveTimeStart.split(':')[0]}</td>` 
+                      + `<td class="align-middle"><button class="btn btn-danger btn-sm" id="btnRmLv:${rowId}">Remove</button></td>`
+                      + `</tr>`;
+          $("#tbodyLv").append(row);
+
+          // add callback for remove buttons
+          $(`#btnRmLv\\:${rowId}`).click(() => {
+            $(`#trLv\\:${rowId}`).remove();
+          });
+        });
+        
+        // adding catchup callback when clicking "Add" button
+        $("#btnAddCat").click(() => {
+          const catchupDate = $("#catchupDate").val();
+          const catchupTimeStart = $("#catchupTimeStart").val();
+          const catchupTimeEnd = $("#catchupTimeEnd").val();
+          const rowId = Date.now().toString();
+          
+          const row = `<tr id="trCat:${rowId}" class="">`
+                      + `<td class="align-middle">${catchupDate}</td>` 
+                      + `<td class="align-middle">${catchupTimeStart}</td>`
+                      + `<td class="align-middle">${catchupTimeEnd}</td>`
+                      + `<td class="align-middle">${catchupTimeEnd.split(':')[0] - catchupTimeStart.split(':')[0]}</td>` 
+                      + `<td class="align-middle"><button class="btn btn-danger btn-sm" id="btnRmCat:${rowId}">Remove</button></td>`
+                      + `</tr>`;
+          $("#tbodyCat").append(row);
+          
+          // add callback for remove buttons
+          $(`#btnRmCat\\:${rowId}`).click(() => {
+            $(`#trCat\\:${rowId}`).remove();
+          });
+        });
+        
+        // add leave's removal button's callback for existing data
+        $("[id^=btnRmLv]").each((_, btn) => {
+          const rowId = btn.id.split(':')[1];
+          $(`#btnRmLv\\:${rowId}`).click(() => {
+            $(`#trLv\\:${rowId}`).remove();
+          });
+        });
+
+        // add catchup's removal button's callback for existing data
+        $("[id^=btnRmCat]").each((_, btn) => {
+          const rowId = btn.id.split(':')[1];
+          $(`#btnRmCat\\:${rowId}`).click(() => {
+            $(`#trCat\\:${rowId}`).remove();
+          });
+        });
+        
+        $('#btnSubmit').click(() => {
+          let formData = { leaves: {}, catchups: {} };
+          $("[id^=trLv]").each((_, tr) => {
+            const rowId = tr.id.split(':')[1];
+            formData.leaves[rowId] = { "date": $(`#date\\:${rowId}`).text(),
+                                       "timeStart": $(`#timeStart\\:${rowId}`).text(),
+                                       "timeEnd": $(`#timeEnd\\:${rowId}`).text()
+                                     };
+          });
+          
+          $("[id^=trCat]").each((_, tr) => {
+            const rowId = tr.id.split(':')[1];
+            formData.catchups[rowId] = { "date": $(`#date\\:${rowId}`).text(),
+                                         "timeStart": $(`#timeStart\\:${rowId}`).text(),
+                                         "timeEnd": $(`#timeEnd\\:${rowId}`).text()
+                                       };
+          });
+          alert(JSON.stringify(formData));
+        });
+        
+      });
+    </script>
+
     <!-- Graphs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="/js/vendor/Chart.min.js"></script>
     <script>
       var ctx = document.getElementById("myChart");
       var myChart = new Chart(ctx, {
@@ -93,6 +320,8 @@
           scales: {
             yAxes: [{
               ticks: {
+                max: 4,
+                min: 0,
                 stepSize: 0.5
               }
             }]
@@ -100,5 +329,8 @@
         }
       });
     </script>
+
+    <!-- DatePicker -->
+    <script src="/js/vendor/bootstrap-datepicker.min.js"></script>
   </body>
 </html>
