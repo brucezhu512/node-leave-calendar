@@ -14,32 +14,40 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="border-bottom">
-            <h1 class="h2">User Profile</h1>
+            <h2 class="h2">User Profile</h2>
           </div>
-          <div class="text-left">
-            <div class="col-md-6 mb-3">
-              <label>Name : <%= name %></label>
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td> Name :</td>
+                <td> <%= name %> </td>
+              </tr>
+              <tr>
+                <td>UID :</td>
+                <td> <%= uid %></td>
+              </tr>
+              <tr>
+                  <td>Pods:</td>
+                  <td><%= pods %></td>              
+              </tr>
+              <tr>
+                <td>Roles:</td>
+                <td><%= roles %></td>
+              </tr>
+            </tbody>
+          </table>
+          <form class="form-inline">
+            <div class="form-group mx-sm-3 mb-2">
+              <label for="inputPassword2" class="sr-only">Password</label>
+              <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New Password" required>
             </div>
-            <div class="col-md-6 mb-3">
-                <label>UID : <%= uid %></label>
-            </div>
-            <div class="col-md-6 mb-3">
-              <form class="form-changePassword" method="POST" id="formChangePassword" action="/changePassword">
-              <label>Password :</label>
-              <input type="password" id="newPassword" name="newPassword" placeholder="New Password" required>
-              <button>Update</button>
-            </div>
+            <button type="submit" class="btn btn-primary mb-2">Update</button>
             <a class="col-md-6 mb-"><%= message %></a>
-            <div class="col-md-6 mb-3">
-              <label>Pods : <%= pods %></label>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label>Roles : <%= roles %></label>
-            </div>
-          </div>
+          </form>
         </main>
+      </div>
+    </div>
 
     <% include includes/bootstrap-js %>
-    
   </body>
 </html>
