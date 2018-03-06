@@ -1,9 +1,9 @@
 'use strict';
 
-const dbUtils = require('../utils');
-const catchupData = require('../data/data.json').catchups;
-
 const DOMAIN = 'CATCHUP';
+
+const dbUtils = require('../utils');
+const catchupData = require('../data/data.json')[DOMAIN];
 
 const moment = require('moment-timezone');
 moment.locale('en');

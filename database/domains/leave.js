@@ -1,9 +1,9 @@
 'use strict';
 
-const dbUtils = require('../utils');
-const leaveData = require('../data/data.json').leaves;
-
 const DOMAIN = 'LEAVE';
+
+const dbUtils = require('../utils');
+const leaveData = require('../data/data.json')[DOMAIN];
 
 const moment = require('moment-timezone');
 moment.locale('en');

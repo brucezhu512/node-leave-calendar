@@ -27,23 +27,26 @@
                 <td> <%= uid %></td>
               </tr>
               <tr>
-                  <td>Pods:</td>
-                  <td><%= pods %></td>              
+                <td>Password :</td>
+                <td>
+                  <form class="form-inline">
+                    <input type="password" name="newPassword" placeholder="New Password" required>
+                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                    <a class="col-md-6"><%= message %></a>
+                  </form>
+                </td>
               </tr>
               <tr>
-                <td>Roles:</td>
-                <td><%= roles %></td>
+                <td>Pod:</td>
+                <td><%= pod %></td>              
+              </tr>
+              <tr>
+                <td>Role:</td>
+                <td><%= role %></td>
               </tr>
             </tbody>
           </table>
-          <form class="form-inline">
-            <div class="form-group mx-sm-3 mb-2">
-              <label for="inputPassword2" class="sr-only">Password</label>
-              <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New Password" required>
-            </div>
-            <button type="submit" class="btn btn-primary mb-2">Update</button>
-            <a class="col-md-6 mb-"><%= message %></a>
-          </form>
+          
         </main>
       </div>
     </div>

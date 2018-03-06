@@ -7,8 +7,8 @@ router.get('/', function(req, res, next) {
   res.render('profile', { title: 'User Profile',
                           uid: userProfile.id,
                           name: userProfile.name,
-                          pods: userProfile.pods,
-                          roles: userProfile.roles,
+                          pod: userProfile.pod,
+                          role: userProfile.role,
                           message: ''
                         });
 });

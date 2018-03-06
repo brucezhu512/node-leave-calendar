@@ -1,5 +1,44 @@
 {
-  "leaves": [
+  "USER": [
+    {
+      "id": "u353910",
+      "name": "Bruce",
+      "credential": "698d51a19d8a121ce581499d7b701668",
+      "pod": "Moonraker",
+      "role": "Admin",
+      "comment": "For test purpose only"
+    },
+    {
+      "id": "u300101",
+      "name": "Shaon",
+      "credential": "698d51a19d8a121ce581499d7b701668",
+      "pod": "Moonraker",
+      "role": "Developer"
+    },
+    {
+      "id": "u300102",
+      "name": "Song",
+      "credential": "698d51a19d8a121ce581499d7b701668",
+      "pod": "Moonraker",
+      "role": "Developer"
+    },
+    {
+      "id": "u300103",
+      "name": "James",
+      "credential": "698d51a19d8a121ce581499d7b701668",
+      "pod": "Moonraker",
+      "role": "Developer"
+    },
+    {
+      "id": "u300104",
+      "name": "Lucien",
+      "credential": "698d51a19d8a121ce581499d7b701668",
+      "pod": "Moonraker",
+      "role": "Developer"
+    }
+  ],
+
+  "LEAVE": [
     {
       "uid": "u353910",
       "date": "2018-02-26",
@@ -17,10 +56,64 @@
       "date": "2018-02-28",
       "timeStart": "9:00",
       "timeEnd": "10:00"
+    },
+    {
+      "uid": "u300101",
+      "date": "2018-02-26",
+      "timeStart": "9:00",
+      "timeEnd": "10:00"
+    },
+    {
+      "uid": "u300101",
+      "date": "2018-02-26",
+      "timeStart": "16:00",
+      "timeEnd": "18:00"
+    },
+    {
+      "uid": "u300101",
+      "date": "2018-02-27",
+      "timeStart": "9:00",
+      "timeEnd": "10:00"
+    },
+    {
+      "uid": "u300101",
+      "date": "2018-02-28",
+      "timeStart": "9:00",
+      "timeEnd": "10:00"
+    },
+    {
+      "uid": "u300102",
+      "date": "2018-02-28",
+      "timeStart": "9:00",
+      "timeEnd": "10:00"
+    },
+    {
+      "uid": "u300102",
+      "date": "2018-02-29",
+      "timeStart": "9:00",
+      "timeEnd": "10:00"
+    },
+    {
+      "uid": "u300103",
+      "date": "2018-02-27",
+      "timeStart": "9:00",
+      "timeEnd": "10:00"
+    },
+    {
+      "uid": "u300103",
+      "date": "2018-02-28",
+      "timeStart": "9:00",
+      "timeEnd": "11:00"
+    },
+    {
+      "uid": "u300104",
+      "date": "2018-02-27",
+      "timeStart": "9:00",
+      "timeEnd": "10:00"
     }
   ],
 
-  "catchups": [
+  "CATCHUP": [
     {
       "uid": "u353910",
       "date": "2018-03-01",
@@ -32,7 +125,54 @@
       "date": "2018-03-02",
       "timeStart": "7:00",
       "timeEnd": "9:00"
+    },
+    {
+      "uid": "u300101",
+      "date": "2018-02-28",
+      "timeStart": "7:00",
+      "timeEnd": "9:00"
+    },
+    {
+      "uid": "u300101",
+      "date": "2018-02-29",
+      "timeStart": "7:00",
+      "timeEnd": "9:00"
+    },
+    {
+      "uid": "u300102",
+      "date": "2018-02-28",
+      "timeStart": "7:00",
+      "timeEnd": "9:00"
+    },
+    {
+      "uid": "u300102",
+      "date": "2018-03-01",
+      "timeStart": "7:00",
+      "timeEnd": "8:00"
+    },
+    {
+      "uid": "u300103",
+      "date": "2018-02-28",
+      "timeStart": "7:00",
+      "timeEnd": "8:00"
+    },
+    {
+      "uid": "u300104",
+      "date": "2018-03-01",
+      "timeStart": "7:00",
+      "timeEnd": "9:00"
     }
-  ]
+  ],
 
+  "roles": [
+    "Admin",
+    "Manager",
+    "Developer",
+    "Business Analyst",
+    "Tester"
+  ],
+
+  "pods": [
+    "Moonraker"
+  ]
 }

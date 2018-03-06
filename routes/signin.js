@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-var userUtil = require('../database/domains/user');
+const userUtil = require('../database/domains/user');
+const md5 = require('md5');
 
 // Global env variables
 var env = require("./consts").env; 
@@ -19,7 +20,7 @@ router.post('/', async (req, res, next) => {
   const uid = req.body.inputUid;
   const pwd = req.body.inputPassword;
 
-  const isAuth = await userUtil.authenticate(uid, pwd);
+  const isAuth = await userUtil.authenticate(uid, md5(pwd));
   if(isAuth) {
     req.session.userProfile = await userUtil.update(uid, (usr) => {
       usr.lastSignTimestamp = Date.now();

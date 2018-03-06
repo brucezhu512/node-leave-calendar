@@ -1,9 +1,9 @@
 'use strict';
 
-const dbUtils = require('../utils');
-const userData = require('../data/users.json').profiles;
-
 const DOMAIN = 'USER';
+
+const dbUtils = require('../utils');
+const userData = require('../data/data.json')[DOMAIN];
 
 exports.load = async (uid) => {
   return await dbUtils.load(DOMAIN, uid.toUpperCase());
@@ -25,9 +25,9 @@ exports.isSync = async (expected) => {
   return latest.lastUpdateTimestamp == expected.lastUpdateTimestamp;
 };
 
-exports.authenticate = async (uid, password) => {
+exports.authenticate = async (uid, md5Pwd) => {
   const latest = await exports.load(uid);
-  const auth = (latest.credential == password);
+  const auth = (latest.credential == md5Pwd);
   if (auth) {
     latest.lastSignTimestamp = Date.now();
     await exports.save(latest);

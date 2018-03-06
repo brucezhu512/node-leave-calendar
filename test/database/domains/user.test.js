@@ -64,8 +64,9 @@ describe('user', () => {
 
   describe('#authenticate(uid, password)', () => {
     it("should return true if uid and password are correct.", async () => {
-      assert.isTrue(await userUtil.authenticate(uid, "111"));
-      assert.isFalse(await userUtil.authenticate(uid, "222"));
+      const md5 = require('md5');
+      assert.isTrue(await userUtil.authenticate(uid, md5("111")));
+      assert.isFalse(await userUtil.authenticate(uid, md5("222")));
     });
   });
 
