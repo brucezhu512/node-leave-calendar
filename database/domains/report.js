@@ -48,9 +48,9 @@ function consolidate(uid, leaves, catchups) {
                       "leaveTimeStart": timeStart.format('H:mm'),
                       "leaveTimeEnd": timeStart.add(1, 'h').format('H:mm'),
                       "duration" : 1,
-                      "catchupDate": "",
-                      "catchupTimeStart": "",
-                      "catchupTimeEnd": ""
+                      "catchupDate": "-",
+                      "catchupTimeStart": "-",
+                      "catchupTimeEnd": "-"
                     });
     }
   });
@@ -67,9 +67,9 @@ function consolidate(uid, leaves, catchups) {
         r.catchupTimeEnd = timeStart.add(1, 'h').format('H:mm');
       } else {
         records.push( { "uid": uid,
-                        "leaveDate": "",
-                        "leaveTimeStart": "",
-                        "leaveTimeEnd": "",
+                        "leaveDate": "-",
+                        "leaveTimeStart": "-",
+                        "leaveTimeEnd": "-",
                         "duration" : 1,
                         "catchupDate": c.date,
                         "catchupTimeStart": timeStart.format('H:mm'),

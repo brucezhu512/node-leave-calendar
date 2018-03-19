@@ -1,0 +1,8 @@
+<%
+calcHours = function(timeStart, timeEnd) {
+  const hourFrom = timeStart.split(':')[0];
+  const hourTo = timeEnd.split(':')[0];
+
+  return (hourFrom <= 12 && hourTo >= 13) ? (hourTo - hourFrom - 1) : (hourTo - hourFrom);
+}
+%>

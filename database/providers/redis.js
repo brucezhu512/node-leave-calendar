@@ -30,6 +30,12 @@ exports.find = async (domain, criteria) => {
   });
 };
 
+exports.delete = async (domain, key) => {
+  return await runWithClient(async (client) => {
+    return await deleteWithPromise(client, domain, key);
+  });
+};
+
 exports.select = async (domain, criteria = (v) => { return true }) => {
   return await runWithClient(async (client) => {
     const keys = await listWithPromise(client, domain);
@@ -123,6 +129,19 @@ function registerWithPromise(client, domain, key) {
     client.sadd(domainIndex, key, (err, reply) => {
       if(err) reject(err);
       resolve();
+    });
+  });
+}
+
+function deleteWithPromise(client, domain, key) {
+  return new Promise((resolve, reject) => {
+    const domainIndex = getDomainIndex(domain);
+    client.del(key, (e, rply) => {
+      if(e) reject(e);
+      client.srem(domainIndex, key, (err, reply) => {
+        if(err) reject(err);
+        resolve(reply == 1);
+      });
     });
   });
 }

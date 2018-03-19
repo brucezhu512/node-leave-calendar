@@ -36,6 +36,26 @@ exports.selectByDateRange = async (from, to, moreCriteria) => {
   });
 }
 
+exports.delete = async (key) => {
+  return await dbUtils.delete(DOMAIN, key); 
+}
+
+exports.submitByDateRange = async (uid, from, to, newLeaves) => {
+  const leaves = await exports.selectByDateRange(from, to, lv => {
+    return lv.uid == uid;
+  });
+  for (let lv of leaves) {
+    await exports.delete(lv.id);
+  }
+  
+  for (let newLv of newLeaves) {
+    if(moment(newLv.date).isBetween(moment(from), moment(to), 'd', '[]')) {
+      newLv.uid = uid;
+      await exports.save(newLv);
+    }
+  }
+}
+
 exports.init = async () => {
   await dbUtils.reset(DOMAIN);
   let stats = {};

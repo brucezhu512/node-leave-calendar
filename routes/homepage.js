@@ -4,6 +4,7 @@ var router = express.Router();
 const leaveUtil = require('../database/domains/leave');
 const catchupUtil = require('../database/domains/catchup');
 const reportUtil = require('../database/domains/report');
+const dtUtil = require('../database/domains/dateUtil');
 
 const moment = require('moment-timezone');
 moment.locale('en');
@@ -18,6 +19,10 @@ router.get('/', async (req, res, next) => {
   const dateBase = moment('2018-03-01');
   const dateStart = monday(dateBase);
   const dateEnd = friday(dateBase);
+
+  req.session.dateStart = dateStart;
+  req.session.dateEnd = dateEnd;
+
   const report = await reportUtil.generate({uid: uid, dateStart: dateStart, dateEnd: dateEnd});
   const leaves = await leaveUtil.selectByUid(uid, dateStart, dateEnd);
   const catchups = await catchupUtil.selectByUid(uid, dateStart, dateEnd);
@@ -25,8 +30,8 @@ router.get('/', async (req, res, next) => {
       
   res.render('homepage', { title: 'Homepage', 
                            report: report,
-                           leaves: leaves,
-                           catchups: catchups,
+                           leaves: sortByDateTime(leaves),
+                           catchups: sortByDateTime(catchups),
                            chartLabels: chartStats.labels.toString(),
                            chartLeaves : chartStats.leaves.toString(),
                            chartCatchups: chartStats.catchups.toString()
@@ -56,6 +61,13 @@ function getChartStats(from, to, report) {
   })
 
   return { labels: labels, leaves: leaves, catchups: catchups };
+}
+
+function sortByDateTime(arr) {
+  return (arr) ? 
+    arr.sort((a,b) => {
+      return dtUtil.moment(a.date, a.timeStart).isAfter(dtUtil.moment(b.date, b.timeStart))
+    }): [];
 }
 
 function monday(m = moment()) {

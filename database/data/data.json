@@ -164,7 +164,7 @@
     }
   ],
 
-  "roles": [
+  "ROLE": [
     "Admin",
     "Manager",
     "Developer",
@@ -172,7 +172,7 @@
     "Tester"
   ],
 
-  "pods": [
+  "TEAM": [
     "Moonraker"
   ]
 }

@@ -36,6 +36,7 @@ var dashboard = require('./routes/dashboard');
 var homepage = require('./routes/homepage');
 var profile = require('./routes/profile');
 var changePassword = require('./routes/changePassword');
+var submitLeave = require('./routes/submitLeave');
 
 
 // Gateway of web application
@@ -56,6 +57,7 @@ app.use('/dashboard', dashboard);
 app.use('/homepage', homepage);
 app.use('/profile', profile);
 app.use('/changePassword', changePassword);
+app.use('/submitLeave', submitLeave);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

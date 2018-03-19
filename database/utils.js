@@ -10,6 +10,8 @@ exports.select = redis.select;
 
 exports.find = redis.find;
 
+exports.delete = redis.delete;
+
 exports.reset = redis.reset;
 
 exports.count = redis.count;
