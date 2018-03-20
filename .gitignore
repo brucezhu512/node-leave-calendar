@@ -60,3 +60,7 @@ typings/
 # Package json file
 package-lock.json
 
+# Local cached css & scripts
+public/scripts
+public/stylesheets
+

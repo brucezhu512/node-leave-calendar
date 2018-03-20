@@ -20,6 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/css", express.static(path.join(__dirname, 'views/css')));
 
 // Express session global settings
 app.use(session({

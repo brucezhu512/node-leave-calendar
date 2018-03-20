@@ -3,8 +3,8 @@
   <head>
     <% include includes/header %>
     <title><%= title %></title>
-    <link href="/css/pages/dashboard.css" rel="stylesheet">
-    <link href="/css/pages/bootstrap-datepicker.standalone.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <link href="/misc/bootstrap-datepicker.standalone.css" rel="stylesheet">
   </head>
 
   <body>
@@ -336,7 +336,7 @@
     </script>
 
     <!-- Graphs -->
-    <script src="/js/vendor/Chart.min.js"></script>
+    <script src="/scripts/Chart.min.js"></script>
     <script>
       var ctx = document.getElementById("myChart");
       var myChart = new Chart(ctx, {
@@ -373,6 +373,6 @@
     </script>
 
     <!-- DatePicker -->
-    <script src="/js/vendor/bootstrap-datepicker.min.js"></script>
+    <script src="/misc/bootstrap-datepicker.min.js"></script>
   </body>
 </html>
