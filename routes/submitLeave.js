@@ -11,14 +11,10 @@ router.post('/', async (req, res, next) => {
   const dateEnd = req.session.dateEnd;
   const leaves = JSON.parse(req.body.leaves);
   const catchups = JSON.parse(req.body.catchups);
-  console.log(dateStart);
-  console.log(dateEnd);
-  console.log(leaves);
-  console.log(catchups);
-  leaveUtil.submitByDateRange(uid, dateStart, dateEnd, leaves);
-  catchupUtil.submitByDateRange(uid, dateStart, dateEnd, catchups);
+  await leaveUtil.submitByDateRange(uid, dateStart, dateEnd, leaves);
+  await catchupUtil.submitByDateRange(uid, dateStart, dateEnd, catchups);
 
-  res.redirect('/homepage');
+  res.send('/timesheet');
 });
 
 module.exports = router;

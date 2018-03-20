@@ -33,7 +33,7 @@ app.use(session({
 var signin = require('./routes/signin');
 var signout = require('./routes/signout');
 var dashboard = require('./routes/dashboard');
-var homepage = require('./routes/homepage');
+var timesheet = require('./routes/timesheet');
 var profile = require('./routes/profile');
 var changePassword = require('./routes/changePassword');
 var submitLeave = require('./routes/submitLeave');
@@ -54,7 +54,7 @@ app.all('*', function (req, res, next) {
 app.use('/signin', signin);
 app.use('/signout', signout);
 app.use('/dashboard', dashboard);
-app.use('/homepage', homepage);
+app.use('/timesheet', timesheet);
 app.use('/profile', profile);
 app.use('/changePassword', changePassword);
 app.use('/submitLeave', submitLeave);

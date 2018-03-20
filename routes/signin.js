@@ -34,7 +34,7 @@ router.post('/', async (req, res, next) => {
     if (req.session.previousUrl) {
       res.redirect(req.session.previousUrl);
     } else {
-      res.redirect('/homepage');
+      res.redirect('/timesheet');
     }
   } else {
     res.render('signin', 

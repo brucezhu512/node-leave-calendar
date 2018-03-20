@@ -14,22 +14,26 @@
         <% include includes/sidebar %>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2"><%= title %></h1>
+            <h2 class="mr-0"><%= title %></h2>
+            <div class="h4 text-muted align-bottom pb-0 mb-0"><%= titlePeriod %></div>
             <div class="btn-toolbar mb-2 mb-md-0">
-              <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary">Share</button>
-                <button class="btn btn-sm btn-outline-secondary">Export</button>
-              </div>
-              <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                This week
-              </button>
+              <form method="POST" id="formTimesheet" action="/timesheet">
+                <input name="datePeriod" id="datePeriod" value="sample" hidden>
+                <div class="btn-group btn-group-toggle mr-2">
+                  <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='sample') ? 'active' : '' %>"
+                    onclick="$('#datePeriod').val('sample')">Sample week</button>
+                  <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='last-week') ? 'active' : '' %>"
+                    onclick="$('#datePeriod').val('last-week')">Last week</button>
+                  <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='this-week') ? 'active' : '' %>"
+                    onclick="$('#datePeriod').val('this-week')">This week</button>
+                </div>
+              </form>
             </div>
           </div>
 
           <canvas class="my-4" id="myChart" width="900" height="300"></canvas>
 
-          <h3>Summary Report</h2>
+          <h3>Summary Report</h3>
           <div class="table-responsive">
             <table class="table table-striped table-sm">
               <thead>
@@ -37,7 +41,7 @@
                   <th>Leave Date</th>
                   <th>Start Time</th>
                   <th>End Time</th>
-                  <th>Duration (hr)</th>
+                  <th>Hour(s)</th>
                   <th>Catch-up Date </th>
                   <th>Start Time</th>
                   <th>End Time</th>
@@ -58,22 +62,26 @@
               </tbody>
             </table>
           </div>
+
           <% include includes/workHours %>
-          <h3>Record your leaves</h2>
+          <hr class="mb-4 mt-0">
+          <h3>Record your leaves</h3>
           <div class="table-responsive">
             <table class="table table-striped table-sm">
               <thead>
                 <tr>
+                  <th/>
                   <th>Leave Date</th>
                   <th>Start Time</th>
                   <th>End Time</th>
-                  <th>Duration (hr)</th>
+                  <th>Hour(s)</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbodyLv">
                 <% leaves.forEach( l => { %>
                   <tr id="trLv:<%= l.id %>">
+                    <td/>
                     <td class="align-middle" id="date:<%= l.id %>"><%= l.date %></td>
                     <td class="align-middle" id="timeStart:<%= l.id %>"><%= l.timeStart %></td>
                     <td class="align-middle" id="timeEnd:<%= l.id %>"><%= l.timeEnd %></td>
@@ -83,58 +91,61 @@
                 <% }) %>
               </tbody>
             </table>
-            <div class="row">
-              <div class="col-md-3 mb-3">
-                <input class="custom-select d-block w-100" id="leaveDate" 
-                  placeholder="Leave Date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
-              </div>
-              <div class="col-md-3 mb-3">
-                <select class="custom-select d-block w-100" id="leaveTimeStart">
-                  <option value="">Start hour ...</option>
-                  <option value="9:00">9:00</option>
-                  <option value="10:00">10:00</option>
-                  <option value="11:00">11:00</option>
-                  <option value="13:00">13:00</option>
-                  <option value="14:00">14:00</option>
-                  <option value="15:00">15:00</option>
-                  <option value="16:00">16:00</option>
-                  <option value="17:00">17:00</option>
-                </select>
-              </div>
-              <div class="col-md-3 mb-3">
-                <select class="custom-select d-block w-100" id="leaveTimeEnd">
-                  <option value="">End hour ...</option>
-                  <option value="10:00">10:00</option>
-                  <option value="11:00">11:00</option>
-                  <option value="12:00">12:00</option>
-                  <option value="14:00">14:00</option>
-                  <option value="15:00">15:00</option>
-                  <option value="16:00">16:00</option>
-                  <option value="17:00">17:00</option>
-                  <option value="18:00">18:00</option>
-                </select>
-              </div>
-              <div class="col-md-2 mb-3">
-                <button class="btn btn-success" id="btnAddLv">Add</button>
-              </div>
+          </div>
+          <div class="row">
+            <div class="col-4 pr-0 mb-3">
+              <input class="custom-select" id="leaveDate" 
+                placeholder="Leave Date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+            </div>
+            <div class="col-3 pr-0 mb-3">
+              <select class="custom-select" id="leaveTimeStart">
+                <option value="">Start hour ...</option>
+                <option value="9:00">9:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+              </select>
+            </div>
+            <div class="col-3 pr-0 mb-3">
+              <select class="custom-select" id="leaveTimeEnd">
+                <option value="">End hour ...</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
+              </select>
+            </div>
+            <div class="col-2 mb-3">
+              <button class="btn btn-success" id="btnAddLv">Add</button>
             </div>
           </div>
 
-          <h3>Record your catch-ups</h2>
+          <div class="mt-3"/>
+          <h3>Record your catch-ups</h3>
           <div class="table-responsive">
             <table class="table table-striped table-sm">
               <thead>
                 <tr>
+                  <th/>
                   <th>Catch-up Date</th>
                   <th>Start Time</th>
                   <th>End Time</th>
-                  <th>Duration (hr)</th>
+                  <th>Hour(s)</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbodyCat">
                 <% catchups.forEach( c => { %>
                   <tr id="trCat:<%= c.id %>">
+                    <td/>
                     <td class="align-middle" id="date:<%= c.id %>"><%= c.date %></td>
                     <td class="align-middle" id="timeStart:<%= c.id %>"><%= c.timeStart %></td>
                     <td class="align-middle" id="timeEnd:<%= c.id %>"><%= c.timeEnd %></td>
@@ -144,58 +155,60 @@
                 <% }) %>
               </tbody>
             </table>
-            <div class="row">
-              <div class="col-md-3 mb-3">
-                <input class="custom-select d-block w-100" id="catchupDate" 
-                  placeholder="Catch-up Date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
-                <div class="invalid-feedback">
-                  Catch-up date is required.
-                </div>
-              </div>
-              <div class="col-md-3 mb-3">
-                <select class="custom-select d-block w-100" id="catchupTimeStart">
-                  <option value="">Start hour ...</option>
-                  <option value="7:00">7:00</option>
-                  <option value="8:00">8:00</option>
-                  <option value="18:00">18:00</option>
-                  <option value="19:00">19:00</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please choose a valid start hour.
-                </div>
-              </div>
-              <div class="col-md-3 mb-3">
-                <select class="custom-select d-block w-100" id="catchupTimeEnd">
-                  <option value="">End hour ...</option>
-                  <option value="8:00">8:00</option>
-                  <option value="9:00">9:00</option>
-                  <option value="19:00">19:00</option>
-                  <option value="20:00">20:00</option>
-                </select>
-                <div class="invalid-feedback">
-                    Please choose a valid end hour.
-                </div>
-              </div>
-              <div class="col-md-2 mb-3">
-                <button class="btn btn-success" id="btnAddCat">Add</button>
+          </div>
+
+          <div class="row">
+            <div class="col-4 pr-0 mb-3">
+              <input class="custom-select" id="catchupDate" 
+                placeholder="Catch-up Date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+              <div class="invalid-feedback">
+                Catch-up date is required.
               </div>
             </div>
+            <div class="col-3 pr-0 mb-3">
+              <select class="custom-select" id="catchupTimeStart">
+                <option value="">Start hour ...</option>
+                <option value="7:00">7:00</option>
+                <option value="8:00">8:00</option>
+                <option value="18:00">18:00</option>
+                <option value="19:00">19:00</option>
+              </select>
+              <div class="invalid-feedback">
+                Please choose a valid start hour.
+              </div>
+            </div>
+            <div class="col-3 pr-0 mb-3">
+              <select class="custom-select" id="catchupTimeEnd">
+                <option value="">End hour ...</option>
+                <option value="8:00">8:00</option>
+                <option value="9:00">9:00</option>
+                <option value="19:00">19:00</option>
+                <option value="20:00">20:00</option>
+              </select>
+              <div class="invalid-feedback">
+                  Please choose a valid end hour.
+              </div>
+            </div>
+            <div class="col-2 mb-3">
+              <button class="btn btn-success" id="btnAddCat">Add</button>
+            </div>
           </div>
-          <table class="table table-striped">
+          
+          <hr class="mt-2 mb-0">
+          <table class="table table-striped mb-1">
             <tbody>
               <tr>
-                <td bold>Total leave hour(s):</td>
+                <td class="text-info font-weight-bold">Total leave hour(s):</td>
                 <td id='totalLvHrs'><%= leaves.reduce((sum, l) => sum + calcHours(l.timeStart, l.timeEnd), 0) %></td>
-                <td bold>Total catch-up hour(s):</td>
+                <td class="text-info font-weight-bold">Total catch-up hour(s):</td>
                 <td id="totalCatHrs"><%= catchups.reduce((sum, c) => sum + calcHours(c.timeStart, c.timeEnd), 0) %></td>
                 <td id="totalMatchResult"></td>
               </tr>
             </tbody>
           </table>
-          <hr class="mb-4">
-          <form class="form-leaves" method="POST" id="formLeaves" action="/homepage">
-            <button class="btn btn-primary btn-lg btn-block" type="submit" id="btnSubmit">Submit</button>
-          </form>
+          
+          <button class="btn btn-primary btn-lg btn-block" id="btnSubmit">Submit</button>
+          <div class="mt-3"/>
         </main>
       </div>
     </div>
@@ -215,7 +228,8 @@
           const rowId = Date.now().toString();
           
           // add new leave record
-          const row = `<tr id="trLv:${rowId}">`
+          const row = `<tr id="trLv:${rowId}" class="table-success">`
+                      + `<td class="align-middle text-center" style="width: 3rem"><span class="badge badge-success">New</span></td>`            
                       + `<td class="align-middle" id="date:${rowId}">${leaveDate}</td>` 
                       + `<td class="align-middle" id="timeStart:${rowId}">${leaveTimeStart}</td>`
                       + `<td class="align-middle" id="timeEnd:${rowId}">${leaveTimeEnd}</td>`
@@ -248,7 +262,8 @@
           const catchupTimeEnd = $("#catchupTimeEnd").val();
           const rowId = Date.now().toString();
           
-          const row = `<tr id="trCat:${rowId}">`
+          const row = `<tr id="trCat:${rowId}" class="table-success">`
+                      + `<td class="align-middle text-center" style="width: 3rem"><span class="badge badge-success">New</span></td>`
                       + `<td class="align-middle" id="date:${rowId}">${catchupDate}</td>` 
                       + `<td class="align-middle" id="timeStart:${rowId}">${catchupTimeStart}</td>`
                       + `<td class="align-middle" id="timeEnd:${rowId}">${catchupTimeEnd}</td>`
@@ -292,11 +307,16 @@
                                          "timeStart": $(`#timeStart\\:${rowId}`).text(),
                                 "timeEnd": $(`#timeEnd\\:${rowId}`).text() });
           });
-          e.preventDefault();
-          $.post('/submitLeave', 
-                { "leaves": JSON.stringify(dataLeaves), 
-                  "catchups": JSON.stringify(dataCatchups) 
-                }, "json");
+
+          $.ajax({
+            type: "POST",
+            url: '/submitLeave',
+            data: { "leaves": JSON.stringify(dataLeaves), 
+                    "catchups": JSON.stringify(dataCatchups) 
+                  }
+          }).done((reUrl) => {
+            window.location.replace(reUrl);
+          });
         });
       });
 

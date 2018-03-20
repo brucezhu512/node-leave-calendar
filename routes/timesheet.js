@@ -15,8 +15,23 @@ const dataFormat = 'YYYY-MM-DD';
 
 /* GET dashboard page. */
 router.get('/', async (req, res, next) => {
+  const dateBase = moment('2018-03-01', dataFormat);
+  await loadTimesheet(req, res, dateBase);
+});
+
+router.post('/', async (req, res, next) => {
+  const datePeriod = req.body.datePeriod;
+  let dateBase = moment('2018-03-01', dataFormat); // Sample data - TODO - remove later
+  if(datePeriod == 'this-week') {
+    dateBase = moment();
+  } else if(datePeriod == 'last-week') {
+    dateBase = moment().subtract(7, 'd');
+  } 
+  await loadTimesheet(req, res, dateBase);
+});
+
+async function loadTimesheet(req, res, dateBase) {
   const uid = req.session.userProfile.id;
-  const dateBase = moment('2018-03-01');
   const dateStart = monday(dateBase);
   const dateEnd = friday(dateBase);
 
@@ -28,15 +43,17 @@ router.get('/', async (req, res, next) => {
   const catchups = await catchupUtil.selectByUid(uid, dateStart, dateEnd);
   const chartStats = getChartStats(dateStart, dateEnd, report);
       
-  res.render('homepage', { title: 'Homepage', 
-                           report: report,
-                           leaves: sortByDateTime(leaves),
-                           catchups: sortByDateTime(catchups),
-                           chartLabels: chartStats.labels.toString(),
-                           chartLeaves : chartStats.leaves.toString(),
-                           chartCatchups: chartStats.catchups.toString()
-                         });
-});
+  res.render('timesheet', { title: 'Timesheet', 
+                            titlePeriod: `${dateStart.format('DD/MMM')} ~ ${dateEnd.format('DD/MMM')}`,
+                            datePeriod: req.body.datePeriod ? req.body.datePeriod : 'sample',
+                            report: report,
+                            leaves: sortByDateTime(leaves),
+                            catchups: sortByDateTime(catchups),
+                            chartLabels: chartStats.labels.toString(),
+                            chartLeaves : chartStats.leaves.toString(),
+                            chartCatchups: chartStats.catchups.toString()
+                          });
+}
 
 module.exports = router;
 
@@ -52,11 +69,11 @@ function getChartStats(from, to, report) {
   const catchups = Array(labels.length).fill(0);
   report.forEach(rec => {
     if (rec.leaveDate) {
-      leaves[moment(rec.leaveDate).diff(from, 'd')]++;
+      leaves[moment(rec.leaveDate, dataFormat).diff(from, 'd')]++;
     }
 
     if (rec.catchupDate) {
-      catchups[moment(rec.catchupDate).diff(from, 'd')]++;
+      catchups[moment(rec.catchupDate, dataFormat).diff(from, 'd')]++;
     }
   })
 
