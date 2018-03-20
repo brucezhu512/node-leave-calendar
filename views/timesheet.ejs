@@ -15,17 +15,17 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h2 class="mr-0"><%= title %></h2>
-            <div class="h4 text-muted align-bottom pb-0 mb-0"><%= titlePeriod %></div>
+            <div class="h4 text-muted align-bottom text-nowrap pb-0 mb-0"><%= titlePeriod %></div>
             <div class="btn-toolbar mb-2 mb-md-0">
               <form method="POST" id="formTimesheet" action="/timesheet">
-                <input name="datePeriod" id="datePeriod" value="sample" hidden>
+                <input name="datePeriod" id="datePeriod" value="<%= datePeriod %>" hidden>
                 <div class="btn-group btn-group-toggle mr-2">
                   <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='sample') ? 'active' : '' %>"
-                    onclick="$('#datePeriod').val('sample')">Sample week</button>
-                  <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='last-week') ? 'active' : '' %>"
-                    onclick="$('#datePeriod').val('last-week')">Last week</button>
+                    onclick="$('#datePeriod').val('sample')">Sample</button>
                   <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='this-week') ? 'active' : '' %>"
                     onclick="$('#datePeriod').val('this-week')">This week</button>
+                  <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='last-week') ? 'active' : '' %>"
+                    onclick="$('#datePeriod').val('last-week')">Last week</button>
                 </div>
               </form>
             </div>
