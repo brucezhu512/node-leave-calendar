@@ -8,8 +8,7 @@ router.get('/', function(req, res, next) {
                           uid: userProfile.id,
                           name: userProfile.name,
                           pod: userProfile.pod,
-                          role: userProfile.role,
-                          message: ''
+                          role: userProfile.role
                         });
 });
 
