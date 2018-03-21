@@ -14,48 +14,57 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">Dashboard</h1>
+            <h2 class="mr-0"><%= title %></h2>
+            <div class="h4 text-muted align-bottom text-nowrap pb-0 mb-0"><%= titlePeriod %></div>
             <div class="btn-toolbar mb-2 mb-md-0">
-              <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary">Share</button>
-                <button class="btn btn-sm btn-outline-secondary">Export</button>
-              </div>
-              <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <span data-feather="calendar"></span>
-                This week
-              </button>
+              <form method="POST" id="formTimesheet" action="/timesheet">
+                <input name="datePeriod" id="datePeriod" value="<%= datePeriod %>" hidden>
+                <div class="btn-group btn-group-toggle mr-2">
+                  <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='sample') ? 'active' : '' %>"
+                    onclick="$('#datePeriod').val('sample')">Sample</button>
+                  <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='this-week') ? 'active' : '' %>"
+                    onclick="$('#datePeriod').val('this-week')">This week</button>
+                  <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='last-week') ? 'active' : '' %>"
+                    onclick="$('#datePeriod').val('last-week')">Last week</button>
+                </div>
+              </form>
             </div>
           </div>
 
           <canvas class="my-4" id="myChart" width="900" height="380"></canvas>
 
-          <h2>Leaves and Catch-ups</h2>
+          <h3>Summary Report</h3>
           <div class="table-responsive">
             <table class="table table-striped table-sm">
               <thead>
                 <tr>
+                  <th>Name</th>
                   <th>Leave Date</th>
                   <th>Start Time</th>
                   <th>End Time</th>
-                  <th>Duration(hr)</th>
+                  <th>Hour(s)</th>
                   <th>Catch-up Date </th>
                   <th>Start Time</th>
                   <th>End Time</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>2017-10-17</td>
-                  <td>9:00</td>
-                  <td>10:00</td>
-                  <td>1</td>
-                  <td>2017-10-18</td>
-                  <td>7:00</td>
-                  <td>8:00</td>
-                </tr>
+                <% report.forEach( row => { %>
+                  <tr>
+                    <td><%= row.name %></td>
+                    <td><%= row.leaveDate %></td>
+                    <td><%= row.leaveTimeStart %></td>
+                    <td><%= row.leaveTimeEnd %></td>
+                    <td><%= row.duration %></td>
+                    <td><%= row.catchupDate %></td>
+                    <td><%= row.catchupTimeStart %></td>
+                    <td><%= row.catchupTimeEnd %></td>
+                  </tr>
+                <% }) %>
               </tbody>
             </table>
           </div>
+          
         </main>
       </div>
     </div>
@@ -67,36 +76,33 @@
     <script>
       var ctx = document.getElementById("myChart");
       var myChart = new Chart(ctx, {
-        type: 'line',
+        type: 'horizontalBar',
         data: {
-          labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          labels: [<%- chartLabels %>],
           datasets: [{
-            data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
-            lineTension: 0,
-            backgroundColor: 'transparent',
-            borderColor: '#007bff',
-            borderWidth: 4,
-            pointBackgroundColor: '#007bff'
+            label: 'Urgent Leave',
+            data: [<%- chartLeaves %>],
+            backgroundColor: '#ff0026',
+            borderColor: '#ff0026',
+            borderWidth: 1
           },
           {
-            data: [11339, 28345, 15483, 29003, 26489, 21092, 10034],
-            lineTension: 0,
-            backgroundColor: 'transparent',
+            label: 'Catchup',
+            data: [<%- chartCatchups %>],
+            backgroundColor: '#007bff',
             borderColor: '#007bff',
-            borderWidth: 4,
-            pointBackgroundColor: '#007bff'
+            borderWidth: 1
           }]
         },
         options: {
           scales: {
-            yAxes: [{
+            xAxes: [{
               ticks: {
-                beginAtZero: false
+                max: 8,
+                min: 0,
+                stepSize: 1
               }
             }]
-          },
-          legend: {
-            display: false,
           }
         }
       });

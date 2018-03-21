@@ -13,7 +13,7 @@ moment.tz.setDefault("Asia/Shanghai");
 const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const dataFormat = 'YYYY-MM-DD';
 
-/* GET dashboard page. */
+/* GET Timesheet page. */
 router.get('/', async (req, res, next) => {
   const dateBase = moment('2018-03-01', dataFormat);
   await loadTimesheet(req, res, dateBase);

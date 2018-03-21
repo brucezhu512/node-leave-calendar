@@ -35,6 +35,14 @@ exports.authenticate = async (uid, md5Pwd) => {
   return auth;
 };
 
+exports.select = async (criteria) => {
+  return await dbUtils.select(DOMAIN, criteria);
+}
+
+exports.selectByPod = async (pods) => {
+  return await exports.select((u) => pods.includes(u.pod));
+}
+
 exports.init = async () => {
   await dbUtils.reset(DOMAIN);
   for (let user of userData) {

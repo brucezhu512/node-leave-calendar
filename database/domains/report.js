@@ -2,6 +2,7 @@
 
 const leaveUtil = require('../domains/leave');
 const catchupUtil = require('../domains/catchup');
+const userUtil = require('../domains/user');
 const dtUtil = require('./dateUtil');
 
 const moment = require('moment-timezone');
@@ -13,10 +14,26 @@ const longAfter = '2099-12-31';
 exports.generate = async (params) => {
   if (params.uid) {
     return loadPersonalSummary(params.uid, params.dateStart, params.dateEnd);
+  } else if (params.pods) {
+    return loadPodsSummary(params.pods, params.dateStart, params.dateEnd);
   } else {
     throw new Error('Unsupported type of report');
   } 
 };
+
+async function loadPodsSummary(pods, from = longAgo, to = longAfter) {
+  const users = await userUtil.selectByPod(pods);
+  const podsSummaryReport = [];
+  for (let user of users) {
+    let report = await loadPersonalSummary(user.id, from, to);
+    report.forEach( row => {
+      row.name = user.name;
+      podsSummaryReport.push(row);
+    });
+  }
+  console.log(podsSummaryReport)
+  return podsSummaryReport;
+}
 
 async function loadPersonalSummary(uid, from = longAgo, to = longAfter) {
   // load data of leaves
