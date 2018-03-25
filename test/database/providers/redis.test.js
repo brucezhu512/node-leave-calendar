@@ -81,6 +81,12 @@ describe('redis', () => {
     });
   });
 
+  describe('#delete(domain, key)', () => {
+    it("should return true if deletion is successful", async () => {
+      assert.isTrue(await redis.delete(domain, key2));
+    });
+  });
+
   describe('#reset(domain)', () => {
     it("should return true when domain is correct", async () => {
       assert.isTrue(await redis.reset(domain));
