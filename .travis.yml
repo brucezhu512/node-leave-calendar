@@ -14,7 +14,7 @@ before_install:
   - sudo service mysql restart
   - mysql -e 'CREATE DATABASE IF NOT EXISTS ulc;'
   - mysql -e 'USE ulc;'
-  - mysql -u root -p root < database/data/mysql.sql
+  - mysql -u root --password="root" < database/data/mysql.sql
 
 install:
   - npm install
