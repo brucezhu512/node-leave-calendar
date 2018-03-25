@@ -1,9 +1,15 @@
 'use strict';
 
-const DOMAIN = 'LEAVE';
+const debug = require('debug')('domain:leave');
+
+const DOMAIN = { 
+  name: 'TimeRecord', 
+  constraints: {
+    type: 1, // "Leave"
+  }
+}; 
 
 const dbUtils = require('../utils');
-const leaveData = require('../data/data.json')[DOMAIN];
 
 const moment = require('moment-timezone');
 moment.locale('en');
@@ -22,17 +28,16 @@ exports.select = async (criteria) => {
 };
 
 exports.selectByUid = async (uid, from, to) => {
-  return await exports.selectByDateRange(from, to, lv => {
-    return lv.uid == uid;
-  });
+  return await exports.selectByDateRange(from, to, { uid: uid });
 };
 
-exports.selectByDateRange = async (from, to, moreCriteria) => {
+exports.selectByDateRange = async (from, to, condition) => {
   const dtFrom = moment(from);
   const dtTo = moment(to);
-  return await exports.select((leave) => {
+  const data = await exports.select(condition);
+  return data.filter( leave => {
     const dtLeave = moment(leave.date);
-    return moreCriteria(leave) && dtLeave.isBetween(dtFrom, dtTo, 'd', '[]');
+    return dtLeave.isBetween(dtFrom, dtTo, 'd', '[]');
   });
 }
 
@@ -41,9 +46,8 @@ exports.delete = async (key) => {
 }
 
 exports.submitByDateRange = async (uid, from, to, newLeaves) => {
-  const leaves = await exports.selectByDateRange(from, to, lv => {
-    return lv.uid == uid;
-  });
+  const leaves = await exports.selectByUid(uid, from, to);
+
   for (let lv of leaves) {
     await exports.delete(lv.id);
   }
@@ -58,6 +62,7 @@ exports.submitByDateRange = async (uid, from, to, newLeaves) => {
 
 exports.init = async () => {
   await dbUtils.reset(DOMAIN);
+  const leaveData = require('../data/data.json').leave;
   let stats = {};
   for (let leave of leaveData) {
     leave.id = Date.now();
@@ -68,7 +73,7 @@ exports.init = async () => {
 
   for (let uid in stats) {
     if (stats.hasOwnProperty(uid)) {
-      console.log(`Import ${stats[uid]} leave row(s) of ${uid} successfully.`);
+      debug(`Import ${stats[uid]} leave row(s) of ${uid} successfully.`);
     }
   }
 };

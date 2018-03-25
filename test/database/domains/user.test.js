@@ -3,20 +3,10 @@
 const testUtil = require('../../index');
 const userUtil = testUtil.require(__filename);
 
-var chai = require('chai');
-var assert = chai.assert;
-
-// SAMPLE USER JSON FOR REFERENCE ONLY ... DON'T USE IT DIRECTLY
-const sample = {
-  "id": "u353910",
-  "name": "Bruce",
-  "credential": "111",
-  "pods": "Moonraker",
-  "roles": "Developer, Admin"
-}
+const chai = require('chai');
+const assert = chai.assert;
 
 const uid = 'u353910';
-
 
 describe('user', () => {
   before(async () => {
@@ -44,13 +34,13 @@ describe('user', () => {
 
   describe('#update(uid, callback)', async () => {
     it("should return same user with updated information and last updated timestamp", async () => {
-      const currentTs = Date.now();
-      const comment = 'Changed by unit test at ' + currentTs;
+      const currentTs = new Date();
+      const status = 'Changed by unit test at ' + currentTs;
       const updatedUser = await userUtil.update(uid, (user) => {
-        user.comment = comment;
+        user.status = status;
       })
-      assert.equal(updatedUser.comment, comment);
-      assert.isAbove(updatedUser.lastUpdateTimestamp, currentTs)
+      assert.equal(updatedUser.status, status);
+      assert.isTrue(updatedUser.lastUpdateTimestamp.getTime() >= currentTs.getTime())
     });
   });
 
@@ -67,6 +57,22 @@ describe('user', () => {
       const md5 = require('md5');
       assert.isTrue(await userUtil.authenticate(uid, md5("111")));
       assert.isFalse(await userUtil.authenticate(uid, md5("222")));
+    });
+  });
+
+  describe('#select(criteria)', () => {
+    it("should return sample user by given uid (case-insensitive)", async () => {
+      const data = await userUtil.select({id: uid});
+      assert.equal(data[0].name, 'Bruce');
+      const poddata = await userUtil.select({pod: 'Moonraker'});
+      assert.isTrue(poddata.length > 0);
+    });
+  });
+
+  describe('#selectByPod(criteria)', () => {
+    it("should return list of users by given names of pods", async () => {
+      const data = await userUtil.selectByPod(['Moonraker']);
+      assert.isTrue(data.length > 0);
     });
   });
 

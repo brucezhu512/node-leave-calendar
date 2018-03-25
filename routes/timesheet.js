@@ -46,7 +46,7 @@ async function loadTimesheet(req, res, dateBase) {
   res.render('timesheet', { title: 'Timesheet', 
                             titlePeriod: `${dateStart.format('DD/MMM')} ~ ${dateEnd.format('DD/MMM')}`,
                             datePeriod: req.body.datePeriod ? req.body.datePeriod : 'sample',
-                            report: report,
+                            report: report.filter(r => r.leaveDate != '-'),
                             leaves: sortByDateTime(leaves),
                             catchups: sortByDateTime(catchups),
                             chartLabels: chartStats.labels.toString(),

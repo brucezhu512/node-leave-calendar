@@ -79,6 +79,13 @@ describe('redis', () => {
       assert.isObject(maryVal);
       assert.equal(maryVal.email, "mary@example.com");
     });
+
+    it("should return null with invalid key", async () => {
+      const joe = await redis.find(domain, e => {
+        return e.user == "joe";
+      });
+      assert.isNull(joe);
+    });
   });
 
   describe('#delete(domain, key)', () => {

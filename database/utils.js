@@ -1,28 +1,21 @@
 'use strict';
 
-var redis = require('./providers/redis');
+const dbname = 'mysql';
+var database = require('./providers/' + dbname);
 
-exports.save = redis.save;
+exports.save = database.save;
 
-exports.load = redis.load;
+exports.load = database.load;
 
-exports.select = redis.select;
+exports.select = database.select;
 
-exports.find = redis.find;
+exports.find = database.find;
 
-exports.delete = redis.delete;
+exports.delete = database.delete;
 
-exports.reset = redis.reset;
+exports.reset = database.reset;
 
-exports.count = redis.count;
+exports.count = database.count;
 
-exports.update = async (domain, key, callback) => {
-  let data = await redis.load(domain, key);
-  if (data == null) {
-    throw new Error('No data was found using key: ' + key);
-  }
-  
-  callback(data);
-  redis.save(domain, key, data);
-  return data;
-};
+exports.update = database.update;
+

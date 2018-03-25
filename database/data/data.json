@@ -1,12 +1,12 @@
 {
-  "USER": [
+  "User": [
     {
       "id": "u353910",
       "name": "Bruce",
       "credential": "698d51a19d8a121ce581499d7b701668",
       "pod": "Moonraker",
       "role": "Admin",
-      "comment": "For test purpose only"
+      "status": "For test purpose only"
     },
     {
       "id": "u300101",
@@ -38,7 +38,7 @@
     }
   ],
 
-  "LEAVE": [
+  "leave": [
     {
       "uid": "u353910",
       "date": "2018-02-26",
@@ -113,7 +113,7 @@
     }
   ],
 
-  "CATCHUP": [
+  "catchup": [
     {
       "uid": "u353910",
       "date": "2018-03-01",

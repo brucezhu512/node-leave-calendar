@@ -1,9 +1,15 @@
 'use strict';
 
-const DOMAIN = 'CATCHUP';
+const debug = require('debug')('domain:catchup');
+
+const DOMAIN = { 
+  name: 'TimeRecord', 
+  constraints: {
+    type: 2, // "Catch-up"
+  }
+};
 
 const dbUtils = require('../utils');
-const catchupData = require('../data/data.json')[DOMAIN];
 
 const moment = require('moment-timezone');
 moment.locale('en');
@@ -22,17 +28,16 @@ exports.select = async (criteria) => {
 };
 
 exports.selectByUid = async (uid, from, to) => {
-  return await exports.selectByDateRange(from, to, lv => {
-    return lv.uid == uid;
-  });
+  return await exports.selectByDateRange(from, to, { uid: uid });
 };
 
-exports.selectByDateRange = async (from, to, moreCriteria) => {
+exports.selectByDateRange = async (from, to, condition) => {
   const dtFrom = moment(from);
   const dtTo = moment(to);
-  return await exports.select((catchup) => {
+  const data = await exports.select(condition);
+  return data.filter(catchup => {
     const dtCatchup = moment(catchup.date);
-    return moreCriteria(catchup) && dtCatchup.isBetween(dtFrom, dtTo, 'd', '[]');
+    return dtCatchup.isBetween(dtFrom, dtTo, 'd', '[]');
   });
 }
 
@@ -41,9 +46,7 @@ exports.delete = async (key) => {
 }
 
 exports.submitByDateRange = async (uid, from, to, newCatchups) => {
-  const catchups = await exports.selectByDateRange(from, to, c => {
-    return c.uid == uid;
-  });
+  const catchups = await exports.selectByUid(uid, from, to);
   for (let c of catchups) {
     await exports.delete(c.id);
   }
@@ -58,6 +61,7 @@ exports.submitByDateRange = async (uid, from, to, newCatchups) => {
 
 exports.init = async () => {
   await dbUtils.reset(DOMAIN);
+  const catchupData = require('../data/data.json').catchup;
   let stats = {};
   for (let catchup of catchupData) {
     catchup.id = Date.now();
@@ -68,7 +72,7 @@ exports.init = async () => {
 
   for (let uid in stats) {
     if (stats.hasOwnProperty(uid)) {
-      console.log(`Import ${stats[uid]} catchup row(s) of ${uid} successfully.`);
+      debug(`Import ${stats[uid]} catchup row(s) of ${uid} successfully.`);
     }
   }
 };

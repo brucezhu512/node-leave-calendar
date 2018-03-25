@@ -31,7 +31,7 @@ async function loadDashboard(req, res, dateBase) {
   res.render('dashboard', { title: 'Dashboard', 
                             titlePeriod: `${dateStart.format('DD/MMM')} ~ ${dateEnd.format('DD/MMM')}`,
                             datePeriod: req.body.datePeriod ? req.body.datePeriod : 'sample',
-                            report: report,
+                            report: report.filter(r => r.leaveDate != '-'),
                             chartLabels: chartStats.labels.toString(),
                             chartLeaves : chartStats.leaves.toString(),
                             chartCatchups: chartStats.catchups.toString()
