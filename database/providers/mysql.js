@@ -3,12 +3,8 @@
 const mysql = require('mysql');
 const debug = require('debug')('database:mysql');
 
-const config = {
-  host     : 'localhost',
-  user     : 'root',
-  password : 'root',
-  database : 'ulc',
-};
+const Config = require('./config');
+const conf = new Config().mysql;
 
 exports.load = async (domain, id, fields) => {
   return await runWithConnection(async (conn) => {
@@ -75,7 +71,7 @@ exports.reset = async (domain) => {
 };
 
 async function runWithConnection(callback) {
-  let connection = mysql.createConnection(config);
+  let connection = mysql.createConnection(conf);
   try {
     return await callback(connection);
   } finally {

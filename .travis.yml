@@ -12,8 +12,6 @@ services:
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS ulc;'
   - mysql -u root ulc < database/data/mysql.sql
-  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('root') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
-  - sudo service mysql restart
 
 install:
   - npm install
@@ -25,7 +23,7 @@ before_script:
   - node blessing
   
 script:
-  - npm test
+  - NODE_ENV=travis npm test
 
 after_success: npm run coverage
 
