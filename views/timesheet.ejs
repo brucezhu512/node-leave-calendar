@@ -95,7 +95,10 @@
           <div class="row">
             <div class="col-4 pr-0 mb-3">
               <input class="custom-select" id="leaveDate" 
-                placeholder="Leave Date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                placeholder="Leave Date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
+                data-date-start-date="<%= dateStart %>" data-date-end-date="<%= dateEnd %>"
+                data-date-days-of-week-disabled="[0,6]" data-date-default-view-date="<%= dateStart %>"
+                data-date-today-highlight="true" data-date-autoclose="true">
             </div>
             <div class="col-3 pr-0 mb-3">
               <select class="custom-select" id="leaveTimeStart">
@@ -160,18 +163,16 @@
           <div class="row">
             <div class="col-4 pr-0 mb-3">
               <input class="custom-select" id="catchupDate" 
-                placeholder="Catch-up Date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
-              <div class="invalid-feedback">
-                Catch-up date is required.
-              </div>
+                placeholder="Catch-up Date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
+                data-date-start-date="<%= dateStart %>" data-date-end-date="<%= dateEnd %>"
+                data-date-days-of-week-disabled="[0,6]" data-date-default-view-date="<%= dateStart %>"
+                data-date-today-highlight="true" data-date-autoclose="true">
             </div>
             <div class="col-3 pr-0 mb-3">
               <select class="custom-select" id="catchupTimeStart">
                 <option value="">Start hour ...</option>
                 <option value="7:00">7:00</option>
                 <option value="8:00">8:00</option>
-                <option value="18:00">18:00</option>
-                <option value="19:00">19:00</option>
               </select>
               <div class="invalid-feedback">
                 Please choose a valid start hour.
@@ -182,8 +183,6 @@
                 <option value="">End hour ...</option>
                 <option value="8:00">8:00</option>
                 <option value="9:00">9:00</option>
-                <option value="19:00">19:00</option>
-                <option value="20:00">20:00</option>
               </select>
               <div class="invalid-feedback">
                   Please choose a valid end hour.
@@ -213,6 +212,23 @@
       </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="validateModal" tabindex="-1" role="dialog" aria-labelledby="validateModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title font-weight-bold" id="validateModalLabel">Validation</h5>
+          </div>
+          <div class="modal-body">
+            <p id="message"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <% include includes/bootstrap-js %>
 
     <!-- Table add/remove rows -->
@@ -225,25 +241,27 @@
           const leaveDate = $("#leaveDate").val();
           const leaveTimeStart = $("#leaveTimeStart").val();
           const leaveTimeEnd = $("#leaveTimeEnd").val();
-          const rowId = Date.now().toString();
           
-          // add new leave record
-          const row = `<tr id="trLv:${rowId}" class="table-success">`
-                      + `<td class="align-middle text-center" style="width: 3rem"><span class="badge badge-success">New</span></td>`            
-                      + `<td class="align-middle" id="date:${rowId}">${leaveDate}</td>` 
-                      + `<td class="align-middle" id="timeStart:${rowId}">${leaveTimeStart}</td>`
-                      + `<td class="align-middle" id="timeEnd:${rowId}">${leaveTimeEnd}</td>`
-                      + `<td class="align-middle" id="duration:${rowId}">${calcHours(leaveTimeStart, leaveTimeEnd)}</td>` 
-                      + `<td class="align-middle"><button class="btn btn-danger btn-sm" id="btnRmLv:${rowId}">Remove</button></td>`
-                      + `</tr>`;
-          $("#tbodyLv").append(row);
-          calcTotalHours('tbodyLv', 'totalLvHrs');
-
-          // add callback for remove buttons
-          $(`#btnRmLv\\:${rowId}`).click(() => {
-            $(`#trLv\\:${rowId}`).remove();
+          if(validateHours(leaveDate, leaveTimeStart, leaveTimeEnd)) {
+            const rowId = Date.now().toString();
+            // add new leave record
+            const row = `<tr id="trLv:${rowId}" class="table-success">`
+                        + `<td class="align-middle text-center" style="width: 3rem"><span class="badge badge-success">New</span></td>`            
+                        + `<td class="align-middle" id="date:${rowId}">${leaveDate}</td>` 
+                        + `<td class="align-middle" id="timeStart:${rowId}">${leaveTimeStart}</td>`
+                        + `<td class="align-middle" id="timeEnd:${rowId}">${leaveTimeEnd}</td>`
+                        + `<td class="align-middle" id="duration:${rowId}">${calcHours(leaveTimeStart, leaveTimeEnd)}</td>` 
+                        + `<td class="align-middle"><button class="btn btn-danger btn-sm" id="btnRmLv:${rowId}">Remove</button></td>`
+                        + `</tr>`;
+            $("#tbodyLv").append(row);            
             calcTotalHours('tbodyLv', 'totalLvHrs');
-          });
+
+            // add callback for remove buttons
+            $(`#btnRmLv\\:${rowId}`).click(() => {
+              $(`#trLv\\:${rowId}`).remove();
+              calcTotalHours('tbodyLv', 'totalLvHrs');
+            });
+          }
         });
 
         // add leave's removal button's callback for existing data
@@ -260,24 +278,27 @@
           const catchupDate = $("#catchupDate").val();
           const catchupTimeStart = $("#catchupTimeStart").val();
           const catchupTimeEnd = $("#catchupTimeEnd").val();
-          const rowId = Date.now().toString();
-          
-          const row = `<tr id="trCat:${rowId}" class="table-success">`
-                      + `<td class="align-middle text-center" style="width: 3rem"><span class="badge badge-success">New</span></td>`
-                      + `<td class="align-middle" id="date:${rowId}">${catchupDate}</td>` 
-                      + `<td class="align-middle" id="timeStart:${rowId}">${catchupTimeStart}</td>`
-                      + `<td class="align-middle" id="timeEnd:${rowId}">${catchupTimeEnd}</td>`
-                      + `<td class="align-middle" id="duration:${rowId}">${calcHours(catchupTimeStart, catchupTimeEnd)}</td>` 
-                      + `<td class="align-middle"><button class="btn btn-danger btn-sm" id="btnRmCat:${rowId}">Remove</button></td>`
-                      + `</tr>`;
-          $("#tbodyCat").append(row);
-          calcTotalHours('tbodyCat', 'totalCatHrs');
-          
-          // add callback for remove buttons
-          $(`#btnRmCat\\:${rowId}`).click(() => {
-            $(`#trCat\\:${rowId}`).remove();
+
+          if(validateHours(catchupDate, catchupTimeStart, catchupTimeEnd)) {
+            const rowId = Date.now().toString();
+            // add new catchup record
+            const row = `<tr id="trCat:${rowId}" class="table-success">`
+                        + `<td class="align-middle text-center" style="width: 3rem"><span class="badge badge-success">New</span></td>`
+                        + `<td class="align-middle" id="date:${rowId}">${catchupDate}</td>` 
+                        + `<td class="align-middle" id="timeStart:${rowId}">${catchupTimeStart}</td>`
+                        + `<td class="align-middle" id="timeEnd:${rowId}">${catchupTimeEnd}</td>`
+                        + `<td class="align-middle" id="duration:${rowId}">${calcHours(catchupTimeStart, catchupTimeEnd)}</td>` 
+                        + `<td class="align-middle"><button class="btn btn-danger btn-sm" id="btnRmCat:${rowId}">Remove</button></td>`
+                        + `</tr>`;
+            $("#tbodyCat").append(row);
             calcTotalHours('tbodyCat', 'totalCatHrs');
-          });
+            
+            // add callback for remove buttons
+            $(`#btnRmCat\\:${rowId}`).click(() => {
+              $(`#trCat\\:${rowId}`).remove();
+              calcTotalHours('tbodyCat', 'totalCatHrs');
+            });
+          }
         });
 
         // add catchup's removal button's callback for existing data
@@ -290,8 +311,8 @@
         });
         
         $('#btnSubmit').click(e => {
-          let dataLeaves = [];
-          let dataCatchups = [];
+          const dataLeaves = [];
+          const dataCatchups = [];
           $("[id^=trLv]").each((_, tr) => {
             const rowId = tr.id.split(':')[1];
             dataLeaves.push({ "id": rowId,
@@ -319,6 +340,35 @@
           });
         });
       });
+
+      function validateHours(d, h1, h2) {
+        if(!d) {
+          $('#message').html('Please choose a date.');
+          $('#validateModal').modal('show');
+          return false;
+        }
+        
+        if(!h1) {
+          $('#message').html('Please select start hour.');
+          $('#validateModal').modal('show');
+          return false;
+        }
+
+        if(!h2) {
+          $('#message').html('Please select end hour.');
+          $('#validateModal').modal('show');
+          return false;
+        }
+
+        const hourFrom = h1.split(':')[0];
+        const hourTo = h2.split(':')[0];
+        if(Number(hourTo) <= Number(hourFrom)) {
+          $('#message').html('End hour must be later then start hour.');
+          $('#validateModal').modal('show');
+          return false;
+        }
+        return true;
+      }
 
       function calcHours(timeStart, timeEnd) {
         const hourFrom = timeStart.split(':')[0];

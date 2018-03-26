@@ -11,17 +11,17 @@ moment.locale('en');
 moment.tz.setDefault("Asia/Shanghai");
 
 const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-const dataFormat = 'YYYY-MM-DD';
+const dateFormat = 'YYYY-MM-DD';
 
 /* GET Timesheet page. */
 router.get('/', async (req, res, next) => {
-  const dateBase = moment('2018-03-01', dataFormat);
+  const dateBase = moment('2018-03-01', dateFormat);
   await loadTimesheet(req, res, dateBase);
 });
 
 router.post('/', async (req, res, next) => {
   const datePeriod = req.body.datePeriod;
-  let dateBase = moment('2018-03-01', dataFormat); // Sample data - TODO - remove later
+  let dateBase = moment('2018-03-01', dateFormat); // Sample data - TODO - remove later
   if(datePeriod == 'this-week') {
     dateBase = moment();
   } else if(datePeriod == 'last-week') {
@@ -44,6 +44,8 @@ async function loadTimesheet(req, res, dateBase) {
   const chartStats = getChartStats(dateStart, dateEnd, report);
       
   res.render('timesheet', { title: 'Timesheet', 
+                            dateStart: dateStart.format(dateFormat),
+                            dateEnd: dateEnd.format(dateFormat),
                             titlePeriod: `${dateStart.format('DD/MMM')} ~ ${dateEnd.format('DD/MMM')}`,
                             datePeriod: req.body.datePeriod ? req.body.datePeriod : 'sample',
                             report: report.filter(r => r.leaveDate != '-'),
@@ -69,11 +71,11 @@ function getChartStats(from, to, report) {
   const catchups = Array(labels.length).fill(0);
   report.forEach(rec => {
     if (rec.leaveDate) {
-      leaves[moment(rec.leaveDate, dataFormat).diff(from, 'd')]++;
+      leaves[moment(rec.leaveDate, dateFormat).diff(from, 'd')]++;
     }
 
     if (rec.catchupDate) {
-      catchups[moment(rec.catchupDate, dataFormat).diff(from, 'd')]++;
+      catchups[moment(rec.catchupDate, dateFormat).diff(from, 'd')]++;
     }
   })
 
