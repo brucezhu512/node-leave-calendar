@@ -31,7 +31,6 @@ async function loadPodsSummary(pods, from = longAgo, to = longAfter) {
       podsSummaryReport.push(row);
     });
   }
-  console.log(podsSummaryReport)
   return podsSummaryReport;
 }
 

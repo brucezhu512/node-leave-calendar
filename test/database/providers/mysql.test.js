@@ -19,8 +19,8 @@ const sampleJson2 = {"username": "mary", "email": "mary@example.com"};
 describe('mysql', () => {
   describe('#save(domain, id, row)', () => {
     it("should return true with valid id", async () => {
-      await mysql.save(domain, key, sampleJson1);
-      const rec = await mysql.load(domain, key, ['username', 'email']);
+      await mysql.save(domain, {id: key}, sampleJson1);
+      const rec = await mysql.load(domain, {id: key}, ['username', 'email']);
       assert.equal(rec.username, sampleJson1.username);
       assert.equal(rec.email, sampleJson1.email);
     });
@@ -28,12 +28,12 @@ describe('mysql', () => {
 
   describe('#load(domain, id)', () => {
     it("should return same json object with same key", async () => {
-      const rec = await mysql.load(domain, key, ['username', 'email']);
+      const rec = await mysql.load(domain, {id: key}, ['username', 'email']);
       assert.equal(JSON.stringify(rec), JSON.stringify(sampleJson1));
     });
 
     it("should return null using a brand new key", async () => {
-      assert.isNull(await mysql.load(domain, Date.now().toString()));
+      assert.isNull(await mysql.load(domain, {id: Date.now().toString()}));
     });
   });
 
@@ -87,38 +87,38 @@ describe('mysql', () => {
 
   describe('#update(domain, id, callback)', () => {
     it("should return updated row once it was saved successfully", async () => {
-      await mysql.save(domain, key, sampleJson2);
-      const mary = await mysql.load(domain, key, ['username', 'email']);
+      await mysql.save(domain, {id: key}, sampleJson2);
+      const mary = await mysql.load(domain, {id: key}, ['username', 'email']);
       assert.equal(mary.username, sampleJson2.username);
       assert.equal(mary.email, sampleJson2.email);
       
       const newEmail = 'xyz@example.com';
-      await mysql.update(domain, key, (data) => {
+      await mysql.update(domain, {id: key}, (data) => {
         data.email = newEmail;
       });
-      const rec = await mysql.load(domain, key);
+      const rec = await mysql.load(domain, {id: key});
       assert.equal(rec.email, newEmail);
     });
 
     it("should throw error when incorrect key is given", async () => {
       const invalidKey = Date.now().toString();
       try {
-        await mysql.update(domain, invalidKey);
+        await mysql.update(domain, {id: invalidKey});
         assert.fail();
       } catch (err) {
-        assert.equal(err.message, 'No data was found with id: ' + invalidKey);
+        assert.equal(err.message, 'No data was found with keys: ' + JSON.stringify({id: invalidKey}));
       }
     });
   });
 
   describe('#delete(domain, criteria)', () => {
     it("should return true where row(s) was deleted", async () => {
-      const res = await mysql.delete(domain, key);
+      const res = await mysql.delete(domain, {id: key});
       assert.isTrue(res);
     });
 
     it("should return false when no row exists with the given id", async () => {
-      const res = await mysql.delete(domain, key);
+      const res = await mysql.delete(domain, {id: key});
       assert.isFalse(res);
     });
   });

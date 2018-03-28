@@ -6,30 +6,30 @@ const debug = require('debug')('database:mysql');
 const Config = require('./config');
 const conf = new Config().mysql;
 
-exports.load = async (domain, id, fields) => {
+exports.load = async (domain, keys, fields) => {
   return await runWithConnection(async (conn) => {
-    return await existsWithPromise(conn, domain, id)
+    return await existsWithPromise(conn, domain, keys)
       .then(async (exists) => {
         return exists ?
-          await loadWithPromise(conn, domain, id, fields) : null;
+          await loadWithPromise(conn, domain, keys, fields) : null;
       });
   });
 };
 
-exports.save = async (domain, id, row) => {
+exports.save = async (domain, keys, row) => {
   return await runWithConnection(async (conn) => {
-    return await saveWithPromise(conn, domain, id, row);
+    return await saveWithPromise(conn, domain, keys, row);
   });
 };
 
-exports.update = async (domain, id, callback) => {
-  const rec = await exports.load(domain, id);
+exports.update = async (domain, keys, callback) => {
+  const rec = await exports.load(domain, keys);
   if (rec) {
     callback(rec);
-    await exports.save(domain, id, rec);
+    await exports.save(domain, keys, rec);
     return rec;
   } else 
-    throw new Error('No data was found with id: ' + id);
+    throw new Error('No data was found with keys: ' + JSON.stringify(keys));
 };
 
 exports.find = async (domain, criteria) => {
@@ -79,27 +79,11 @@ async function runWithConnection(callback) {
   }
 }
 
-function saveWithPromise(conn, domain, id, row) {
+function saveWithPromise(conn, domain, keys, row) {
   return new Promise((resolve, reject) => {
-    let sql = `INSERT INTO ${domain.name} (id`
-    let sqlIns = ` VALUES (?`
-    let sqlUpd = ` ON DUPLICATE KEY UPDATE `
-    const vals = [id]
-    fillFields(row, (col, val) => {
-      sql = sql.concat(`, ${col}`);
-      sqlIns = sqlIns.concat(`, ?`);
-      sqlUpd = sqlUpd.concat(`${col} = VALUES(${col}), `)
-      vals.push(val);
-    });
+    const vals = [];
+    const sql = makeInsertOrUpdateStatement(domain, keys, row, vals);
 
-    fillFields(domain.constraints, (col, val) => {
-      sql = sql.concat(`, ${col}`);
-      sqlIns = sqlIns.concat(`, ?`);
-      sqlUpd = sqlUpd.concat(`${col} = VALUES(${col}), `)
-      vals.push(val);
-    });
-
-    sql = sql.concat(')', sqlIns, ')', sqlUpd.substr(0, sqlUpd.length -2));
     conn.query(sql, vals, (err, res) => {
       if(err) reject(err);
       debug(`${sql} | [${vals}]`);
@@ -108,9 +92,14 @@ function saveWithPromise(conn, domain, id, row) {
   });
 }
 
-function loadWithPromise(conn, domain, id, fields = ['*']) {
+function loadWithPromise(conn, domain, keys, fields = ['*']) {
   return new Promise((resolve, reject) => {
-    conn.query(`select ${fields.join(', ')} from ${domain.name} where id = "${id}"`, (err, res) => {
+    let sql = `select ${fields.join(', ')} from ${domain.name}`;
+    const vals = [];
+    const clause = makeWhereClause(vals, keys);
+    sql = sql.concat(clause);
+
+    conn.query(sql, vals, (err, res) => {
       if(err) reject(err);
       const rec = res[0];
       if(rec) {
@@ -138,18 +127,28 @@ function selectWithPromise(conn, domain, fields, criteria) {
   });
 }
 
-function existsWithPromise(conn, domain, id) {
+function existsWithPromise(conn, domain, keys) {
   return new Promise((resolve, reject) => {
-    conn.query(`select 1 from ${domain.name} where id = "${id}"`, (err, res) => {
+    let sql = `select 1 from ${domain.name}`;
+    const vals = [];
+    const clause = makeWhereClause(vals, keys);
+    sql = sql.concat(clause);
+
+    conn.query(sql, vals, (err, res) => {
       if(err) reject(err);
       resolve((res && res.length > 0) ? true : false);
     });
   });
 }
 
-function deleteWithPromise(conn, domain, id) {
+function deleteWithPromise(conn, domain, keys) {
   return new Promise((resolve, reject) => {
-    conn.query(`delete from ${domain.name} where id = '${id}'`, (err, res) => {
+    let sql = `delete from ${domain.name}`;
+    const vals = [];
+    const clause = makeWhereClause(vals, keys);
+    sql = sql.concat(clause);
+
+    conn.query(sql, vals, (err, res) => {
       if(err) reject(err);
       resolve(res.affectedRows > 0);
     });
@@ -171,12 +170,29 @@ function resetWithPromise(conn, domain) {
   }); 
 }
 
-function fillFields(ds, callback, excludes = []) {
-  for(let key in ds) {
-    if (key != 'id' && !excludes.includes(key)) {
-      callback(key, ds[key]);
+function makeInsertOrUpdateStatement(domain, keys, row, vals) {
+  const stat = {
+    sql: `INSERT INTO ${domain.name} (`,
+    sqlIns: ` VALUES (`,
+    sqlUpd: ` ON DUPLICATE KEY UPDATE`,
+  }
+
+  fillStatement(stat, keys, vals);
+  fillStatement(stat, row, vals, col => !keys.hasOwnProperty(col));
+  fillStatement(stat, domain.constraints, vals, col => !keys.hasOwnProperty(col) && !row.hasOwnProperty(col));
+  
+  return stat.sql.concat(')', stat.sqlIns, ')', stat.sqlUpd);
+}
+
+function fillStatement(stat, ds, vals, check = col => true) {
+  for(let col in ds) {
+    if(check(col)) {
+      stat.sql = stat.sql.concat(stat.sql.endsWith('(') ? `${col}` : `, ${col}`);
+      stat.sqlIns = stat.sqlIns.concat(stat.sqlIns.endsWith('(') ? '?' : ', ?');
+      stat.sqlUpd = stat.sqlUpd.concat(stat.sqlUpd.endsWith('UPDATE') ? ` ${col} = VALUES(${col})` : `, ${col} = VALUES(${col})`);
+      vals.push(ds[col]);
     }
-  } 
+  }
 }
 
 function makeWhereClause(vals, ...ds) {

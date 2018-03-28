@@ -16,11 +16,11 @@ moment.locale('en');
 moment.tz.setDefault("Asia/Shanghai");
 
 exports.load = async (id) => {
-  return await dbUtils.load(DOMAIN, id);
+  return await dbUtils.load(DOMAIN, {id: id});
 };
 
 exports.save = async (leave) => {
-  return await dbUtils.save(DOMAIN, leave.id, leave);
+  return await dbUtils.save(DOMAIN, {id: leave.id}, leave);
 };
 
 exports.select = async (criteria) => {
@@ -41,8 +41,8 @@ exports.selectByDateRange = async (from, to, condition) => {
   });
 }
 
-exports.delete = async (key) => {
-  return await dbUtils.delete(DOMAIN, key); 
+exports.delete = async (id) => {
+  return await dbUtils.delete(DOMAIN, {id: id}); 
 }
 
 exports.submitByDateRange = async (uid, from, to, newLeaves) => {

@@ -1,13 +1,14 @@
 'use strict';
 
-const dbname = 'mysql';
-var database = require('./providers/' + dbname);
+const database = require(`./providers/mysql`);
 
 exports.save = database.save;
 
 exports.load = database.load;
 
 exports.select = database.select;
+
+exports.selectWithColumn = database.selectWithColumn;
 
 exports.find = database.find;
 

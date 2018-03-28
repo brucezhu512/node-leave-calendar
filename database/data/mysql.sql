@@ -22,6 +22,15 @@ CREATE TABLE `TimeRecord` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `ReferenceCode` (
+  `code` varchar(30) NOT NULL,
+  `type` varchar(20) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `active` int(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`code`,`type`)
+);
+
 CREATE TABLE `user_test` (
   `id` int(11) NOT NULL,
   `username` varchar(16) NOT NULL,

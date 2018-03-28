@@ -9,31 +9,52 @@
       "status": "For test purpose only"
     },
     {
-      "id": "u300101",
+      "id": "u389564",
       "name": "Shaon",
       "credential": "698d51a19d8a121ce581499d7b701668",
       "pod": "Moonraker",
       "role": "Developer"
     },
     {
-      "id": "u300102",
+      "id": "u358645",
       "name": "Song",
       "credential": "698d51a19d8a121ce581499d7b701668",
       "pod": "Moonraker",
       "role": "Developer"
     },
     {
-      "id": "u300103",
+      "id": "u376782",
       "name": "James",
       "credential": "698d51a19d8a121ce581499d7b701668",
       "pod": "Moonraker",
       "role": "Developer"
     },
     {
-      "id": "u300104",
+      "id": "u388430",
       "name": "Lucien",
       "credential": "698d51a19d8a121ce581499d7b701668",
       "pod": "Moonraker",
+      "role": "Developer"
+    },
+    {
+      "id": "u356122",
+      "name": "Catherine G",
+      "credential": "698d51a19d8a121ce581499d7b701668",
+      "pod": "Fallout",
+      "role": "BA"
+    },
+    {
+      "id": "u374581",
+      "name": "Jeff",
+      "credential": "698d51a19d8a121ce581499d7b701668",
+      "pod": "Fallout",
+      "role": "Developer"
+    },
+    {
+      "id": "u373619",
+      "name": "Michael",
+      "credential": "698d51a19d8a121ce581499d7b701668",
+      "pod": "Fallout",
       "role": "Developer"
     }
   ],
@@ -58,55 +79,55 @@
       "timeEnd": "10:00"
     },
     {
-      "uid": "u300101",
+      "uid": "u389564",
       "date": "2018-02-26",
       "timeStart": "9:00",
       "timeEnd": "10:00"
     },
     {
-      "uid": "u300101",
+      "uid": "u389564",
       "date": "2018-02-26",
       "timeStart": "16:00",
       "timeEnd": "18:00"
     },
     {
-      "uid": "u300101",
+      "uid": "u389564",
       "date": "2018-02-27",
       "timeStart": "9:00",
       "timeEnd": "10:00"
     },
     {
-      "uid": "u300101",
+      "uid": "u389564",
       "date": "2018-02-28",
       "timeStart": "9:00",
       "timeEnd": "10:00"
     },
     {
-      "uid": "u300102",
+      "uid": "u358645",
       "date": "2018-02-28",
       "timeStart": "9:00",
       "timeEnd": "10:00"
     },
     {
-      "uid": "u300102",
+      "uid": "u358645",
       "date": "2018-02-29",
       "timeStart": "9:00",
       "timeEnd": "10:00"
     },
     {
-      "uid": "u300103",
+      "uid": "u376782",
       "date": "2018-02-27",
       "timeStart": "9:00",
       "timeEnd": "10:00"
     },
     {
-      "uid": "u300103",
+      "uid": "u376782",
       "date": "2018-02-28",
       "timeStart": "9:00",
       "timeEnd": "11:00"
     },
     {
-      "uid": "u300104",
+      "uid": "u388430",
       "date": "2018-02-27",
       "timeStart": "9:00",
       "timeEnd": "10:00"
@@ -127,37 +148,37 @@
       "timeEnd": "9:00"
     },
     {
-      "uid": "u300101",
+      "uid": "u389564",
       "date": "2018-02-28",
       "timeStart": "7:00",
       "timeEnd": "9:00"
     },
     {
-      "uid": "u300101",
+      "uid": "u389564",
       "date": "2018-02-29",
       "timeStart": "7:00",
       "timeEnd": "9:00"
     },
     {
-      "uid": "u300102",
+      "uid": "u358645",
       "date": "2018-02-28",
       "timeStart": "7:00",
       "timeEnd": "9:00"
     },
     {
-      "uid": "u300102",
+      "uid": "u358645",
       "date": "2018-03-01",
       "timeStart": "7:00",
       "timeEnd": "8:00"
     },
     {
-      "uid": "u300103",
+      "uid": "u376782",
       "date": "2018-02-28",
       "timeStart": "7:00",
       "timeEnd": "8:00"
     },
     {
-      "uid": "u300104",
+      "uid": "u388430",
       "date": "2018-03-01",
       "timeStart": "7:00",
       "timeEnd": "9:00"
@@ -172,7 +193,14 @@
     "Tester"
   ],
 
-  "TEAM": [
-    "Moonraker"
+  "pod": [
+    {
+      "code": "Moonraker",
+      "name": "Moonraker"
+    },
+    {
+      "code": "Fallout",
+      "name": "Fallout"
+    }
   ]
 }

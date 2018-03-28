@@ -9,18 +9,17 @@ moment.locale('en');
 moment.tz.setDefault("Asia/Shanghai");
 
 const dbUtils = require('../utils');
-const userData = require('../data/data.json')[DOMAIN.name];
 
 exports.load = async (uid) => {
-  return await dbUtils.load(DOMAIN, uid);
+  return await dbUtils.load(DOMAIN, {id: uid});
 };
 
 exports.save = async (user) => {
-  return await dbUtils.save(DOMAIN, user.id, user);
+  return await dbUtils.save(DOMAIN, {id: user.id}, user);
 };
 
 exports.update = async (uid, callback) => {
-  return await dbUtils.update(DOMAIN, uid, (user) => {
+  return await dbUtils.update(DOMAIN, {id: uid}, (user) => {
     callback(user);
     user.lastUpdateTimestamp = new Date();
   });
@@ -51,6 +50,7 @@ exports.selectByPod = async (pod) => {
 
 exports.init = async () => {
   await dbUtils.reset(DOMAIN);
+  const userData = require('../data/data.json')[DOMAIN.name];
   for (let user of userData) {
     await exports.save(user);
     debug(`Import user ${user.id} successfully.`);
