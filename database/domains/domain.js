@@ -16,6 +16,10 @@ class Domain {
   async load(keyVal) {
     return await dbUtils.load(this.domain, this._getKeyParamByVal(keyVal));
   };
+
+  async find(criteria) {
+    return await dbUtils.find(this.domain, criteria);
+  };
   
   async save(rec)  {
     return await dbUtils.save(this.domain, this._getKeyParamByRec(rec), rec);
@@ -35,6 +39,10 @@ class Domain {
 
   async select(criteria) {
     return await dbUtils.select(this.domain, criteria);
+  }
+
+  async selectWithColumn(cols, criteria) {
+    return await dbUtils.selectWithColumn(this.domain, cols, criteria);
   }
 
   debug(message) {
@@ -67,7 +75,5 @@ class Domain {
     return keyObj;
   }
 }
-
-
 
 module.exports = Domain;

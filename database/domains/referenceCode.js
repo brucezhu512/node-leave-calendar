@@ -1,41 +1,29 @@
-const dbUtils = require('../utils');
+const Domain = require('../domains/domain');
 
-class ReferenceCode {
+class ReferenceCode extends Domain {
   constructor(type) {
-    this.type = type;
-    this.debug = require('debug')(`ref-code:${type}`);
-    this.domain = { 
-      name: 'ReferenceCode',
-      key: 'code',
-      constraints: {
-        type: type
-      }
-    };
+    super(type, 'ReferenceCode', ['code'], {type: type});
+    this.codeType = type;
   }
 
   async getAll(activeOnly = true) {
-    return await dbUtils.selectWithColumn(this.domain, ['code', 'name', 'description'], activeOnly ? {active: 1} : {});
+    return await super.selectWithColumn(['code', 'name', 'description'], activeOnly ? {active: 1} : {});
   }
 
   async getByCode(code) {
-    return await dbUtils.find(this.domain, {code: code});
+    return await super.find({code: code});
   }
 
   async getByName(name) {
-    return await dbUtils.find(this.domain, {name: name});
+    return await super.find({name: name});
   }
 
-  async import() {
-    await dbUtils.reset(this.domain);
-    const refcodes = require('../data/data.json')[this.type];
-    for (let refcode of refcodes) {
-      await dbUtils.save(this.domain, {}, refcode);
-      this.debug(`Import ${this.type} "${refcode.name}" successfully.`);
-    }
+  async init() {
+    await super.init(rec => {}, rec => {
+      this.debug(`Import ${this.codeType} "${rec.name}" successfully.`);
+    });
   }
 }
 
-const c = new ReferenceCode("pod");
-c.getAll(false).then(res => {
-  console.log(res);
-});
+
+
