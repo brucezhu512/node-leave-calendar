@@ -6,7 +6,7 @@ class ReferenceCode {
     this.debug = require('debug')(`ref-code:${type}`);
     this.domain = { 
       name: 'ReferenceCode',
-      id: "code",
+      key: 'code',
       constraints: {
         type: type
       }

@@ -1,13 +1,12 @@
 'use strict';
 
-const userUtil = require('./domains/user');
-const leaveUtil = require('./domains/leave');
-const catchupUtil = require('./domains/catchup');
+const User = require('./domains/user');
+const TimeRecord = require('./domains/timerecord');
 
 exports.importAll = async () => {
-  await userUtil.init();
-  await leaveUtil.init();
-  await catchupUtil.init();
+  await new User().init();
+  await new TimeRecord('leave', 1).init();
+  await new TimeRecord('catchup', 2).init();
 };
 
 exports.importAll();

@@ -1,58 +1,47 @@
 'use strict';
 
-const debug = require('debug')('domain:user');
-
-const DOMAIN = { name: 'User'};
-
 const moment = require('moment-timezone');
 moment.locale('en');
 moment.tz.setDefault("Asia/Shanghai");
 
-const dbUtils = require('../utils');
+const Domain = require('./domain');
 
-exports.load = async (uid) => {
-  return await dbUtils.load(DOMAIN, {id: uid});
-};
-
-exports.save = async (user) => {
-  return await dbUtils.save(DOMAIN, {id: user.id}, user);
-};
-
-exports.update = async (uid, callback) => {
-  return await dbUtils.update(DOMAIN, {id: uid}, (user) => {
-    callback(user);
-    user.lastUpdateTimestamp = new Date();
-  });
-};
-
-exports.isSync = async (expected) => {
-  const latest = await exports.load(expected.id);
-  return moment(expected.lastUpdateTimestamp).isSame(moment(expected.lastUpdateTimestamp));
-};
-
-exports.authenticate = async (uid, md5Pwd) => {
-  const latest = await exports.load(uid);
-  const auth = (latest.credential == md5Pwd);
-  if (auth) {
-    latest.lastSignTimestamp = new Date();
-    await exports.save(latest);
+class User extends Domain {
+  constructor() {
+    super('user', 'User');
   }
-  return auth;
-};
 
-exports.select = async (criteria) => {
-  return await dbUtils.select(DOMAIN, criteria);
+  async update (uid, callback) {
+    return await super.update(uid, (user) => {
+      callback(user);
+      user.lastUpdateTimestamp = new Date();
+    });
+  }
+  
+  async isSync(expected)  {
+    const latest = await super.load(expected.id);
+    return moment(expected.lastUpdateTimestamp).isSame(moment(expected.lastUpdateTimestamp));
+  }
+  
+  async authenticate(uid, md5Pwd) {
+    const latest = await super.load(uid);
+    const auth = (latest.credential == md5Pwd);
+    if (auth) {
+      latest.lastSignTimestamp = new Date();
+      await super.save(latest);
+    }
+    return auth;
+  }
+  
+  async selectByPod(pod) {
+    return await super.select({pod: pod});
+  }
+
+  async init() {
+    await super.init(u => {}, user => {
+      super.debug(`Import user [${user.id}] successfully.`);
+    })
+  }
 }
 
-exports.selectByPod = async (pod) => {
-  return await exports.select({pod: pod});
-}
-
-exports.init = async () => {
-  await dbUtils.reset(DOMAIN);
-  const userData = require('../data/data.json')[DOMAIN.name];
-  for (let user of userData) {
-    await exports.save(user);
-    debug(`Import user ${user.id} successfully.`);
-  }
-};
+module.exports = User;

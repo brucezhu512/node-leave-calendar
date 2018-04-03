@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-const userUtil = require('../database/domains/user');
+const User = require('../database/domains/user');
+const userUtil = new User();
 const md5 = require('md5');
 
 // Global env variables

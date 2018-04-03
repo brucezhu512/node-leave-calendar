@@ -94,7 +94,7 @@ function saveWithPromise(conn, domain, keys, row) {
 
 function loadWithPromise(conn, domain, keys, fields = ['*']) {
   return new Promise((resolve, reject) => {
-    let sql = `select ${fields.join(', ')} from ${domain.name}`;
+    let sql = `select ${fields.join(', ')} from ${domain.table}`;
     const vals = [];
     const clause = makeWhereClause(vals, keys);
     sql = sql.concat(clause);
@@ -114,7 +114,7 @@ function loadWithPromise(conn, domain, keys, fields = ['*']) {
 
 function selectWithPromise(conn, domain, fields, criteria) {
   return new Promise((resolve, reject) => {
-    let sql = `select ${fields.join(', ')} from ${domain.name}`  
+    let sql = `select ${fields.join(', ')} from ${domain.table}`  
     const vals = [];
     const clause = makeWhereClause(vals, domain.constraints, criteria);
     sql = sql.concat(clause);
@@ -129,7 +129,7 @@ function selectWithPromise(conn, domain, fields, criteria) {
 
 function existsWithPromise(conn, domain, keys) {
   return new Promise((resolve, reject) => {
-    let sql = `select 1 from ${domain.name}`;
+    let sql = `select 1 from ${domain.table}`;
     const vals = [];
     const clause = makeWhereClause(vals, keys);
     sql = sql.concat(clause);
@@ -143,7 +143,7 @@ function existsWithPromise(conn, domain, keys) {
 
 function deleteWithPromise(conn, domain, keys) {
   return new Promise((resolve, reject) => {
-    let sql = `delete from ${domain.name}`;
+    let sql = `delete from ${domain.table}`;
     const vals = [];
     const clause = makeWhereClause(vals, keys);
     sql = sql.concat(clause);
@@ -157,7 +157,7 @@ function deleteWithPromise(conn, domain, keys) {
 
 function resetWithPromise(conn, domain) {
   return new Promise((resolve, reject) => {
-    let sql = `delete from ${domain.name}`;
+    let sql = `delete from ${domain.table}`;
     const vals = [];
     const clause = makeWhereClause(vals, domain.constraints);
     sql = sql.concat(clause);
@@ -172,7 +172,7 @@ function resetWithPromise(conn, domain) {
 
 function makeInsertOrUpdateStatement(domain, keys, row, vals) {
   const stat = {
-    sql: `INSERT INTO ${domain.name} (`,
+    sql: `INSERT INTO ${domain.table} (`,
     sqlIns: ` VALUES (`,
     sqlUpd: ` ON DUPLICATE KEY UPDATE`,
   }

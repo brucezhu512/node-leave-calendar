@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-const leaveUtil = require('../database/domains/leave');
-const catchupUtil = require('../database/domains/catchup');
+const TimeRecord = require('../database/domains/timerecord');
+const leaveUtil = new TimeRecord('leave', 1);
+const catchupUtil = new TimeRecord('catchup', 2);
 
 router.post('/', async (req, res, next) => {
   let profileInSession = req.session.userProfile;

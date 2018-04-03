@@ -1,7 +1,8 @@
 'use strict';
 
 const testUtil = require('../../index');
-const userUtil = testUtil.require(__filename);
+const User = testUtil.require(__filename);
+const userUtil = new User();
 
 const chai = require('chai');
 const assert = chai.assert;

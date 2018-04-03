@@ -1,8 +1,9 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var userUtil = require('../database/domains/user');
-var md5 = require('md5');
+const User = require('../database/domains/user');
+const userUtil = new User();
+const md5 = require('md5');
 
 router.post('/', async (req, res, next) => {
   let profileInSession = req.session.userProfile;
@@ -21,8 +22,6 @@ router.post('/', async (req, res, next) => {
   } else {
     res.send('User profile was just updated by someone else, please re-signin.');
   }
-
-  res.send(message);
 });
 
 module.exports = router;

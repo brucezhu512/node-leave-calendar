@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-const leaveUtil = require('../database/domains/leave');
-const catchupUtil = require('../database/domains/catchup');
+const TimeRecord = require('../database/domains/timerecord');
+const leaveUtil = new TimeRecord('leave', 1);
+const catchupUtil = new TimeRecord('catchup', 2);
 const reportUtil = require('../database/domains/report');
-const dtUtil = require('../database/domains/dateUtil');
+const dtUtil = require('../database/domains/dateutil');
 
 const moment = require('moment-timezone');
 moment.locale('en');
@@ -32,8 +33,8 @@ router.post('/', async (req, res, next) => {
 
 async function loadTimesheet(req, res, dateBase) {
   const uid = req.session.userProfile.id;
-  const dateStart = monday(dateBase);
-  const dateEnd = friday(dateBase);
+  const dateStart = dtUtil.monday(dateBase);
+  const dateEnd = dtUtil.friday(dateBase);
 
   req.session.dateStart = dateStart;
   req.session.dateEnd = dateEnd;
@@ -89,10 +90,3 @@ function sortByDateTime(arr) {
     }): [];
 }
 
-function monday(m = moment()) {
-  return moment(m).subtract(m.weekday()-1, 'd');
-}
-
-function friday(m = moment()) {
-  return moment(m).add(5-m.weekday(), 'd');
-}

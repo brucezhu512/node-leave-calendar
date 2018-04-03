@@ -71,7 +71,7 @@
       function changePassword(newPassword) {
         $.ajax({
           type: "POST",
-          url: '/changePassword',
+          url: '/changepassword',
           data: { "newPassword": newPassword }
         }).done((message) => {
           $('#pwd').val('');

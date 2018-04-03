@@ -1,9 +1,11 @@
 'use strict';
 
-const leaveUtil = require('../domains/leave');
-const catchupUtil = require('../domains/catchup');
-const userUtil = require('../domains/user');
-const dtUtil = require('./dateUtil');
+const TimeRecord = require('../domains/timerecord');
+const leaveUtil = new TimeRecord('leave', 1);
+const catchupUtil = new TimeRecord('catchup', 2);
+const User = require('../domains/user');
+const userUtil = new User();
+const dtUtil = require('./dateutil');
 
 const moment = require('moment-timezone');
 moment.locale('en');

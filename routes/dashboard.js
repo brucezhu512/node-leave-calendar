@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const reportUtil = require('../database/domains/report');
-const userUtil = require('../database/domains/user');
+const dtUtil = require('../database/domains/dateutil');
 
 const moment = require('moment-timezone');
 moment.locale('en');
@@ -19,8 +19,8 @@ router.get('/', async (req, res, next) => {
 
 async function loadDashboard(req, res, dateBase) {
   const uid = req.session.userProfile.id;
-  const dateStart = monday(dateBase);
-  const dateEnd = friday(dateBase);
+  const dateStart = dtUtil.monday(dateBase);
+  const dateEnd = dtUtil.friday(dateBase);
 
   req.session.dateStart = dateStart;
   req.session.dateEnd = dateEnd;
@@ -61,12 +61,5 @@ function getChartStats(from, to, report) {
   return { labels: usernames, leaves: leaves, catchups: catchups };
 }
 
-function monday(m = moment()) {
-  return moment(m).subtract(m.weekday()-1, 'd');
-}
-
-function friday(m = moment()) {
-  return moment(m).add(5-m.weekday(), 'd');
-}
 
  
