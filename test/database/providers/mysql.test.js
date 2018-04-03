@@ -7,7 +7,7 @@ var chai = require('chai');
 let assert = chai.assert;
 
 const domain = {
-  name: "user_test",
+  table: "user_test",
   constraints: {
     userType: 1
   }
