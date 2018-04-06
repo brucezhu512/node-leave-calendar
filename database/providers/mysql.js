@@ -118,10 +118,10 @@ function selectWithPromise(conn, domain, fields, criteria) {
     const vals = [];
     const clause = makeWhereClause(vals, domain.constraints, criteria);
     sql = sql.concat(clause);
-    
+
     conn.query(sql, vals, (err, rows) => {
       if(err) reject(err);
-      debug(`${sql} | [${vals}] -> ${rows.length} row(s) selected.`);
+      debug(`${sql} | [${vals}] -> ${rows ? rows.length : 0} row(s) selected.`);
       resolve(rows);
     });
   });

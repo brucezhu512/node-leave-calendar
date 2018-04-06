@@ -33,8 +33,8 @@ router.post('/', async (req, res, next) => {
 
 async function loadTimesheet(req, res, dateBase) {
   const uid = req.session.userProfile.id;
-  const dateStart = dtUtil.monday(dateBase);
-  const dateEnd = dtUtil.friday(dateBase);
+  const dateStart = dtUtil.monday(dateBase, false);
+  const dateEnd = dtUtil.friday(dateBase, false);
 
   req.session.dateStart = dateStart;
   req.session.dateEnd = dateEnd;

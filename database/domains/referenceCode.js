@@ -20,10 +20,9 @@ class ReferenceCode extends Domain {
 
   async init() {
     await super.init(rec => {}, rec => {
-      this.debug(`Import ${this.codeType} "${rec.name}" successfully.`);
+      super.debug(`Import ${this.codeType} "${rec.name}" successfully.`);
     });
   }
 }
 
-
-
+module.exports = ReferenceCode;

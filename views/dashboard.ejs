@@ -13,11 +13,11 @@
         <% include includes/sidebar %>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h2 class="mr-0"><%= title %></h2>
-            <div class="h4 text-muted align-bottom text-nowrap pb-0 mb-0"><%= titlePeriod %></div>
-            <div class="btn-toolbar mb-2 mb-md-0">
-              <form method="POST" id="formTimesheet" action="/timesheet">
+          <form method="POST" id="formTimesheet" action="/dashboard">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-2">
+              <h2 class="mr-0"><%= title %></h2>
+              <div class="h4 text-muted align-bottom text-nowrap pb-0 mb-0"><%= titlePeriod %></div>
+              <div class="btn-toolbar mb-2 mb-md-0">
                 <input name="datePeriod" id="datePeriod" value="<%= datePeriod %>" hidden>
                 <div class="btn-group btn-group-toggle mr-2">
                   <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='sample') ? 'active' : '' %>"
@@ -27,9 +27,24 @@
                   <button class="btn btn-sm btn-outline-secondary <%= (datePeriod=='last-week') ? 'active' : '' %>"
                     onclick="$('#datePeriod').val('last-week')">Last week</button>
                 </div>
-              </form>
+              </div>
             </div>
-          </div>
+
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+              <h5 class="mr-0">Pods:</h5>
+              <% allPods.forEach( (pod, idx) => { %>
+              <input name="pod<%= idx %>" id="pod<%= idx %>" hidden
+                value="<%= selectedPods.includes(pod) ? pod : '' %>">
+              <div class="custom-control custom-checkbox mr-2">
+                <input type="checkbox" class="custom-control-input" id="podCheck<%= idx %>"
+                  onclick="$('#pod<%= idx %>').val(this.checked ? '<%= pod %>' : '')"
+                  <%= selectedPods.includes(pod) ? 'checked' : '' %>>
+                <label class="custom-control-label" for="podCheck<%= idx %>"><%= pod %></label>
+              </div>
+            <% }) %>
+              <button class="btn btn-sm btn-success">Let's check</button>
+            </div>
+          </form>
 
           <canvas class="my-4" id="myChart" width="900" height="380"></canvas>
 

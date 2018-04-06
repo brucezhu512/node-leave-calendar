@@ -24,15 +24,18 @@ exports.generate = async (params) => {
 };
 
 async function loadPodsSummary(pods, from = longAgo, to = longAfter) {
-  const users = await userUtil.selectByPod(pods);
   const podsSummaryReport = [];
-  for (let user of users) {
-    let report = await loadPersonalSummary(user.id, from, to);
-    report.forEach( row => {
-      row.name = user.name;
-      podsSummaryReport.push(row);
-    });
+  for (let pod of pods) {
+    const users = await userUtil.selectByPod(pod);
+    for (let user of users) {
+      let report = await loadPersonalSummary(user.id, from, to);
+      report.forEach( row => {
+        row.name = user.name;
+        podsSummaryReport.push(row);
+      });
+    }
   }
+  
   return podsSummaryReport;
 }
 
