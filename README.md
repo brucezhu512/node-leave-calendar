@@ -4,14 +4,27 @@
 An experimental project of personal leave calendar system built on Node.js.
 
 ## Prerequisites
-- Node.js v8.9.x (LTS)
-- Redis v4.0.x
+- Node.js v8.9.x or greater (LTS)
+- MySQL Community Server (GPL) v5.7.20
+- Redis v4.0.x (deprecated)
+
 
 ## Get Started
 1. Initialize database
 ```
-$ node ./database/import.js
-Import user u353910 successfully.
+$ DEBUG=domain:* node ./database/import.js
+
+  domain:user Import user [u353910] successfully. +0ms
+  domain:user Import user [u389564] successfully. +3ms
+  ...
+  domain:leave Import 3 leave row(s) of u353910 successfully. +54ms
+  domain:leave Import 4 leave row(s) of u389564 successfully. +0ms
+  ...
+  domain:catchup Import 2 leave row(s) of u353910 successfully. +38ms
+  domain:catchup Import 2 leave row(s) of u389564 successfully. +0ms
+  ...
+  domain:pod Import pod "Moonraker" successfully. +7ms
+  domain:pod Import pod "Fallout" successfully. +2ms
 ```
 2. Copy css & scripts
 ```
