@@ -49,7 +49,7 @@ class TimeRecord extends Domain {
 
     for (let uid in stats) {
       if (stats.hasOwnProperty(uid)) {
-        super.debug(`Import ${stats[uid]} leave row(s) of ${uid} successfully.`);
+        super.debug(`Import ${stats[uid]} ${name} row(s) of ${uid} successfully.`);
       }
     }
   }

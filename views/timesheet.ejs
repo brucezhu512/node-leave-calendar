@@ -330,13 +330,17 @@
           });
 
           $.ajax({
-            type: "POST",
+            type: 'POST',
             url: '/submit',
-            data: { "leaves": JSON.stringify(dataLeaves), 
-                    "catchups": JSON.stringify(dataCatchups) 
-                  }
+            data: { 
+              dateStart: '<%= dateStart %>',
+              dateEnd: '<%= dateEnd %>',
+              leaves: JSON.stringify(dataLeaves), 
+              catchups: JSON.stringify(dataCatchups) 
+            }
           }).done((reUrl) => {
-            window.location.replace(reUrl);
+            const datePeriod = $('#datePeriod').val();
+            window.location.replace(`${reUrl}?datePeriod=${datePeriod}`);
           });
         });
       });

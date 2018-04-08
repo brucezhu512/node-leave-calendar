@@ -6,10 +6,9 @@ const leaveUtil = new TimeRecord('leave', 1);
 const catchupUtil = new TimeRecord('catchup', 2);
 
 router.post('/', async (req, res, next) => {
-  let profileInSession = req.session.userProfile;
-  const uid = profileInSession.id;
-  const dateStart = req.session.dateStart;
-  const dateEnd = req.session.dateEnd;
+  const uid = req.session.userProfile.id;
+  const dateStart = req.body.dateStart;
+  const dateEnd = req.body.dateEnd;
   const leaves = JSON.parse(req.body.leaves);
   const catchups = JSON.parse(req.body.catchups);
   await leaveUtil.submitByDateRange(uid, dateStart, dateEnd, leaves);

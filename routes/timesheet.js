@@ -16,49 +16,53 @@ const dateFormat = 'YYYY-MM-DD';
 
 /* GET Timesheet page. */
 router.get('/', async (req, res, next) => {
-  const dateBase = moment('2018-03-01', dateFormat);
-  await loadTimesheet(req, res, dateBase);
+  const uid = req.session.userProfile.id;
+  const respJson = await loadTimesheet(uid, req.query.datePeriod);
+  res.render('timesheet', respJson);
 });
 
 router.post('/', async (req, res, next) => {
-  const datePeriod = req.body.datePeriod;
-  let dateBase = moment('2018-03-01', dateFormat); // Sample data - TODO - remove later
-  if(datePeriod == 'this-week') {
-    dateBase = moment();
-  } else if(datePeriod == 'last-week') {
-    dateBase = moment().subtract(7, 'd');
-  } 
-  await loadTimesheet(req, res, dateBase);
+  const uid = req.session.userProfile.id;
+  const respJson = await loadTimesheet(uid, req.body.datePeriod);
+  res.render('timesheet', respJson);
 });
 
-async function loadTimesheet(req, res, dateBase) {
-  const uid = req.session.userProfile.id;
+async function loadTimesheet(uid, datePeriod) {
+  const dateBase = getBaseDate(datePeriod);
   const dateStart = dtUtil.monday(dateBase, false);
   const dateEnd = dtUtil.friday(dateBase, false);
-
-  req.session.dateStart = dateStart;
-  req.session.dateEnd = dateEnd;
 
   const report = await reportUtil.generate({uid: uid, dateStart: dateStart, dateEnd: dateEnd});
   const leaves = await leaveUtil.selectByUid(uid, dateStart, dateEnd);
   const catchups = await catchupUtil.selectByUid(uid, dateStart, dateEnd);
   const chartStats = getChartStats(dateStart, dateEnd, report);
       
-  res.render('timesheet', { title: 'Timesheet', 
-                            dateStart: dateStart.format(dateFormat),
-                            dateEnd: dateEnd.format(dateFormat),
-                            titlePeriod: `${dateStart.format('DD/MMM')} ~ ${dateEnd.format('DD/MMM')}`,
-                            datePeriod: req.body.datePeriod ? req.body.datePeriod : 'sample',
-                            report: report.filter(r => r.leaveDate != '-'),
-                            leaves: sortByDateTime(leaves),
-                            catchups: sortByDateTime(catchups),
-                            chartLabels: chartStats.labels.toString(),
-                            chartLeaves : chartStats.leaves.toString(),
-                            chartCatchups: chartStats.catchups.toString()
-                          });
+  return { 
+    title: 'Timesheet', 
+    dateStart: dateStart.format(dateFormat),
+    dateEnd: dateEnd.format(dateFormat),
+    titlePeriod: `${dateStart.format('DD/MMM')} ~ ${dateEnd.format('DD/MMM')}`,
+    datePeriod: datePeriod ? datePeriod : 'sample',
+    report: report.filter(r => r.leaveDate != '-'),
+    leaves: sortByDateTime(leaves),
+    catchups: sortByDateTime(catchups),
+    chartLabels: chartStats.labels.toString(),
+    chartLeaves : chartStats.leaves.toString(),
+    chartCatchups: chartStats.catchups.toString()
+  };
 }
 
 module.exports = router;
+
+function getBaseDate(datePeriod) {
+  if(datePeriod == 'this-week') {
+    return moment();
+  } else if(datePeriod == 'last-week') {
+    return moment().subtract(7, 'd');
+  } else {
+    return moment('2018-03-01', dateFormat); // Sample data - TODO - remove later
+  }
+}
 
 function getChartStats(from, to, report) {
   const date = moment(from);
