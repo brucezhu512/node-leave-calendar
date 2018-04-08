@@ -41,7 +41,7 @@
                   <%= selectedPods.includes(pod) ? 'checked' : '' %>>
                 <label class="custom-control-label" for="podCheck<%= idx %>"><%= pod %></label>
               </div>
-            <% }) %>
+              <% }) %>
               <button class="btn btn-sm btn-success">Let's check</button>
             </div>
           </form>
@@ -50,7 +50,7 @@
 
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-2">
             <h3>Summary Report</h3>
-            <button class="btn btn-sm btn-primary">Export - TODO</button>
+            <button class="btn btn-sm btn-primary" onclick="download()">Export as CSV</button>
           </div>
           <div class="table-responsive">
             <table class="table table-striped table-sm">
@@ -61,7 +61,7 @@
                   <th>Start Time</th>
                   <th>End Time</th>
                   <th>Hour(s)</th>
-                  <th>Catch-up Date </th>
+                  <th>Catch-up Date</th>
                   <th>Start Time</th>
                   <th>End Time</th>
                 </tr>
@@ -124,6 +124,21 @@
           }
         }
       });
+
+      function download() {
+        const a = document.createElement('a');
+        const blob = new Blob([
+          '"Name","Leave Date","Start Time","End Time","Hour(s)","Catch-up Date","Start Time","End Time"', '\n',
+          <% report.forEach( r => { %>
+            "<%= r.name %>,<%= r.leaveDate %>,<%= r.leaveTimeStart %>,<%= r.leaveTimeEnd %>,<%= r.duration %>,<%= r.catchupDate %>,<%= r.catchupTimeStart %>,<%= r.catchupTimeEnd %>", '\n',
+          <% }) %>                    
+        '']);
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = 'Report.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
     </script>
   </body>
 </html>
