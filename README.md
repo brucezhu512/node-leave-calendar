@@ -10,8 +10,14 @@ An experimental project of personal leave calendar system built on Node.js.
 
 
 ## Get Started
-1. Initialize database
+1. Initialize database (assume MySQL installed and root password is 'root' as well)
 ```
+$ mysql -e 'CREATE DATABASE IF NOT EXISTS ulc;'
+  (Password entered here ... and no output after success)
+
+$ mysql -u root -p ulc < database/data/mysql.sql
+  (Password entered here ... and no output after success)
+
 $ DEBUG=domain:* node ./database/import.js
 
   domain:user Import user [u353910] successfully. +0ms
